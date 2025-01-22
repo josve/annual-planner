@@ -17,8 +17,11 @@ const months = [
 // Adjust or load from your backend as needed.
 interface EventData {
     name: string;
-    month: number;
+    month: number; // 0-based index (0=January)
+    itemCount?: number; // Optional property to hold the count
+    index?: number
 }
+
 const events: EventData[] = [
     {
         name: "Medlemsmöte - Kommunalt program",
@@ -26,13 +29,87 @@ const events: EventData[] = [
     },
     {
         name: "Sommarkampanj",
-        month: 0
+        month: 2
     },
     {
-        name: "Höstkonferens",
-        month: 0,
-    }
+        name: "Något coolt",
+        month: 2
+    },
+
+{
+    name: "Höstkonferens",
+    month: 4,
+},
+{
+    name: "Höstkonferens",
+    month: 4,
+},
+{
+    name: "Höstkonferens",
+    month: 4,
+},
+{
+    name: "Höstkonferens",
+    month: 4,
+},
+{
+    name: "Höstkonferens",
+    month: 9,
+},
+{
+    name: "Höstkonferens",
+    month: 9,
+}
+,
+{
+    name: "Höstkonferens",
+    month: 9,
+}
+
+
+
+
 ];
+
+/**
+ * Adds an `itemCount` property to each event based on the number of events in the same month.
+ * @param events - Array of events to process.
+ * @returns A new array of events with the `itemCount` property added.
+ */
+function addItemCountToEvents(events: EventData[]): EventData[] {
+    // Step 1: Count the number of events in each month
+    const monthCounts: Record<number, number> = {};
+    events.forEach(event => {
+        if (monthCounts[event.month]) {
+            monthCounts[event.month] += 1;
+        } else {
+            monthCounts[event.month] = 1;
+        }
+    });
+
+    const currentIndex: Record<number, number> = {};
+
+
+    function getIndex(month: number) {
+        let index = currentIndex[month];
+        if (index == undefined) {
+            currentIndex[month] = 0;
+            index = -1;
+        }
+        index++;
+        currentIndex[month] = index;
+        return index;
+    }
+
+    // Step 2: Assign the `itemCount` to each event
+    const updatedEvents = events.map(event => ({
+        ...event,
+        itemCount: monthCounts[event.month],
+        index: getIndex(event.month)
+    }));
+
+    return updatedEvents;
+}
 
 // Convert <svg> to Base64 data URL (SVG).
 function svgToDataUrl(svgElement: SVGSVGElement): string {
@@ -92,6 +169,8 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number) {
     const svgRoot = d3.select(svgEl);
     svgRoot.selectAll("*").remove();
 
+    const eventsWithCount = addItemCountToEvents(events);
+
     // Define margin, so we don't get clipped text.
     const margin = 50;
     const w = width - margin * 2;
@@ -116,27 +195,64 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number) {
 
     // 1) Draw a SINGLE GREEN RING (with 12 arcs if you want month division visible).
     //    If you want absolutely no division lines, you can create one arc from 0 to 2π.
-    const monthArc = d3.arc<any>()
-        .innerRadius(innerRadius)
+
+    const monthData = months.map((m, i) => i); // 0..11
+
+    const quarterPerMonth = 4;
+    const totalMonths = 12;
+    const radiansPerMonth = (2 * Math.PI) / totalMonths;
+    const radiansPerQuarter = radiansPerMonth / quarterPerMonth;
+
+    // Generate monthData split into quarters
+    const monthDataWithQuarters: any = [];
+    for (let m = 0; m < totalMonths; m++) {
+        for (let q = 0; q < quarterPerMonth; q++) {
+            monthDataWithQuarters.push({ month: m, quarter: q });
+        }
+    }
+    // Single green color
+    const singleGreen = "rgb(255,185,166)"; // RGB(83, 160, 69) Hex: #53A045
+
+    const topArc = d3.arc<any>()
+        .innerRadius(outerRadius * 0.98)
         .outerRadius(outerRadius)
         .padAngle(0.002); // small gap
 
-    const monthData = months.map((m, i) => i); // 0..11
-    const color1 = "#58CD83"; // RGB(88, 205, 131)
-    const color2 = "#76A837"; // RGB(118, 168, 55)
-
-    // Each month arc from i..(i+1), all green
-    svg.selectAll("path.month-arc")
-        .data(monthData)
+    // Each quarter arc
+    svg.selectAll("path.month-arc-2")
+        .data(monthDataWithQuarters)
         .enter()
         .append("path")
+        .attr("class", "month-arc-2")
         .attr("transform", `translate(${centerX},${centerY})`)
-        .attr("fill", (d, i) => (i % 2 === 0 ? color1 : color2)) // Alternating colors
+        .attr("fill", "rgb(83,160,69)") // Single green color
         .attr("d", (d) => {
-            const startAngle = monthToAngle(d);
-            const endAngle = monthToAngle(d + 1);
+            const startAngle = monthToAngle(d.month) + d.quarter * radiansPerQuarter;
+            const endAngle = startAngle + radiansPerQuarter;
+            return topArc({ startAngle, endAngle });
+        });
+
+    // Define the arc generator
+    const monthArc = d3.arc<any>()
+        .innerRadius(innerRadius)
+        .outerRadius(outerRadius * 0.98)
+        .padAngle(0.002); // small gap
+
+    // Each quarter arc
+    svg.selectAll("path.month-arc")
+        .data(monthDataWithQuarters)
+        .enter()
+        .append("path")
+        .attr("class", "month-arc")
+        .attr("transform", `translate(${centerX},${centerY})`)
+        .attr("fill", "rgba(83,160,69, 0.5)") // Single green color
+        .attr("d", (d) => {
+            const startAngle = monthToAngle(d.month) + d.quarter * radiansPerQuarter;
+            const endAngle = startAngle + radiansPerQuarter;
             return monthArc({ startAngle, endAngle });
         });
+
+
 
     // 2) Place Month Labels around the outer edge
     //    We'll position them slightly outside the ring
@@ -161,21 +277,22 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number) {
         .attr("dy", "0.35em")
         .text((d) => months[d]);
 
-    // 3) GOLD ARCS for events (startMonth to endMonth inclusive).
-    //    We'll overlay them slightly inside the ring, so we see them clearly.
     const eventArc = d3.arc<any>()
         .innerRadius(innerRadius)
-        .outerRadius(outerRadius* 0.98)
+        .outerRadius(outerRadius)
         .padAngle(0.002); // small gap
 
     // Convert startMonth/endMonth to angles
-    const eventData = events.map((ev) => {
-        const startA = monthToAngle(ev.month);
-        const endA = monthToAngle(ev.month + 1);
+    const eventData = eventsWithCount.map((ev) => {
+        const startA = monthToAngle(ev.month) + (Math.PI / 2);
+        const endA = monthToAngle(ev.month + 1) + (Math.PI / 2);
+        const diff = (endA - startA) / ev.itemCount!;
+        const adjStart = startA + (diff * ev.index!);
+        const adjEnd = adjStart + diff;
         return {
             ...ev,
-            startAngle: Math.min(startA, endA),
-            endAngle: Math.max(startA, endA)
+            startAngle: Math.min(adjStart, adjEnd),
+            endAngle: Math.max(adjStart, adjEnd)
         };
     });
 
@@ -184,13 +301,13 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number) {
         .enter()
         .append("path")
         .attr("transform", `translate(${centerX},${centerY})`)
-        .attr("fill", "rgb(246,228,0)") // gold
+        .attr("fill", "rgba(83,160,69, 1)") // gold
         .attr("d", (d) =>
             eventArc({
                 startAngle: d.startAngle,
                 endAngle: d.endAngle
             })
-        )    .on("mouseover", (event, d) => {
+        )    .on("mouseover", (event: any, d: any) => {
         tooltip
             .style("opacity", 1)
             .html(`<strong>${d.name}</strong>`)
@@ -208,19 +325,25 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number) {
         .append("text")
         .attr("class", "event-label")
         .attr("font-size", 12)
-        .attr("fill", "#000")
+        .attr("fill", "#fff")
         .attr("text-anchor", "middle")
         .attr("dy", "0.35em")
         .attr("transform", (d) => {
             const midAngle = (d.startAngle + d.endAngle) / 2;
-            // Position label halfway along the event arc's radial range
-            const arcMidRadius = (innerRadius * 0.95 + outerRadius * 0.98) / 2;
-            const x = centerX + arcMidRadius * Math.cos(midAngle);
-            const y = centerY + arcMidRadius * Math.sin(midAngle);
-            const deg = (midAngle * 180) / Math.PI + 90;
-            return `translate(${x},${y}) rotate(${deg})`;
+            // Typically, for a donut, place it halfway between inner & outer:
+            const arcMidRadius = (innerRadius + outerRadius) / 2;
+
+            const x = centerX + arcMidRadius * Math.cos(midAngle - (Math.PI / 2));
+            const y = centerY + arcMidRadius * Math.sin(midAngle - (Math.PI / 2));
+
+            // If you want text tangent to the arc:
+            let angle = (midAngle * 180) / Math.PI - 90;
+            if (angle > 90 || angle < -90) {
+                angle += 180;
+            }
+
+            return `translate(${x},${y}) rotate(${angle})`;
         })
-        .call(wrap, 80) // 80 pixels max width
         .text((d) => d.name);
 }
 
@@ -287,10 +410,9 @@ export default function Page() {
 
     return (
         <main style={{padding: 20}}>
-            <h1>Annual Wheel (D3) - Updated & Polished</h1>
+            <h1>Årshjul 2025</h1>
             <p>
-                A single green ring for months, gold arcs for events, radial month labels
-                around the edge, and centered event labels. Larger inner circle for a more open design.
+                Detta är ett årshjul
             </p>
             <div style={{textAlign: "center"}}>
                 <svg ref={svgRef} viewBox="0 0 700 700" width="100%" height="auto"/>
