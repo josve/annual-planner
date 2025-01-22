@@ -9,14 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.1",
+    "canvg": "^4.0.2",
+    "d3": "^7.9.0",
+    "db-migrate": "^0.11.14",
+    "db-migrate-mysql": "^3.0.0",
+    "echarts-for-react": "^3.0.2",
+    "jspdf": "^2.5.2",
+    "mysql2": "^3.12.0",
+    "next": "15.1.6",
+    "pptxgenjs": "^3.12.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.1.6"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^19",
-    "@types/react-dom": "^19"
+    "@types/react-dom": "^19",
+    "typescript": "^5"
   }
 }
