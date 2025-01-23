@@ -13,61 +13,49 @@ const months = [
     "Juli", "Augusti", "September", "Oktober", "November", "December"
 ];
 
-// Example events with a startMonth and endMonth (inclusive).
-// Adjust or load from your backend as needed.
 interface EventData {
     name: string;
     month: number; // 0-based index (0=January)
+}
+
+interface EventDataWithCount extends EventData {
     itemCount?: number; // Optional property to hold the count
     index?: number
 }
 
 const events: EventData[] = [
     {
-        name: "Medlemsmöte - Kommunalt program",
+        name: "Medlemsmöte - Agape",
         month: 0,
     },
     {
-        name: "Sommarkampanj",
-        month: 2
+        name: "Medlemsmöte - Partiprogram",
+        month: 1
     },
     {
-        name: "Något coolt",
+        name: "Årsmöte - Partiprogram",
         month: 2
     },
-
 {
-    name: "Höstkonferens",
+    name: "Medlemsmöte - Kommunalt program",
+    month: 3,
+},
+{
+    name: "Medlemsmöte - Kommunalt program",
     month: 4,
 },
 {
-    name: "Höstkonferens",
-    month: 4,
+    name: "Medlemsmöte - Kommunalt program",
+    month: 7,
 },
 {
-    name: "Höstkonferens",
-    month: 4,
-},
-{
-    name: "Höstkonferens",
-    month: 4,
-},
-{
-    name: "Höstkonferens",
+    name: "Medlemsmöte - Kongress",
     month: 9,
 },
 {
-    name: "Höstkonferens",
-    month: 9,
-}
-,
-{
-    name: "Höstkonferens",
-    month: 9,
-}
-
-
-
+    name: "Medlemsmöte - Kommunalt program",
+    month: 10,
+},
 
 ];
 
@@ -76,7 +64,7 @@ const events: EventData[] = [
  * @param events - Array of events to process.
  * @returns A new array of events with the `itemCount` property added.
  */
-function addItemCountToEvents(events: EventData[]): EventData[] {
+function addItemCountToEvents(events: EventData[]): EventDataWithCount[] {
     // Step 1: Count the number of events in each month
     const monthCounts: Record<number, number> = {};
     events.forEach(event => {
@@ -130,37 +118,6 @@ function monthToAngle(monthIndex: number): number {
     return monthIndex * radiansPerMonth + offset;
 }
 
-function wrap(text: d3.Selection<SVGTextElement, any, any, any>, width: number) {
-    text.each(function () {
-        const text = d3.select(this);
-        const words = text.text().split(/\s+/).reverse();
-        let word: string | undefined;
-        let line: string[] = [];
-        const lineHeight = 1.1; // ems
-        const y = text.attr("y");
-        const dy = parseFloat(text.attr("dy"));
-        let tspan = text.text(null)
-            .append("tspan")
-            .attr("x", 0)
-            .attr("y", y)
-            .attr("dy", `${dy}em`);
-        while (word = words.pop()) {
-            line.push(word);
-            tspan.text(line.join(" "));
-            if ((tspan.node() as any).getComputedTextLength() > width) {
-                line.pop();
-                tspan.text(line.join(" "));
-                line = [word];
-                tspan = text.append("tspan")
-                    .attr("x", 0)
-                    .attr("y", y)
-                    .attr("dy", `${lineHeight}em`)
-                    .text(word);
-            }
-        }
-    });
-}
-
 /**
  * Draw the D3-based "annual wheel" into an <svg> element.
  */
@@ -210,8 +167,6 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number) {
             monthDataWithQuarters.push({ month: m, quarter: q });
         }
     }
-    // Single green color
-    const singleGreen = "rgb(255,185,166)"; // RGB(83, 160, 69) Hex: #53A045
 
     const topArc = d3.arc<any>()
         .innerRadius(outerRadius * 0.98)
