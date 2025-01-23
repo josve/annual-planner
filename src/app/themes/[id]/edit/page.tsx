@@ -18,32 +18,6 @@ export default async function EditThemePage({ params }: PageProps) {
     const { id } = params;
     const themeId = parseInt(id, 10);
 
-    // Fetch the current session
-    const session: any = await getServerSession(authOptions);
-
-    // If no session exists, prompt the user to log in
-    if (!session) {
-        return (
-            <Container maxWidth="md" sx={{ textAlign: "center", mt: 8 }}>
-                <Typography variant="h4" gutterBottom>
-                    Edit Theme
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                    Please log in to edit your themes.
-                </Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    component={Link}
-                    href="/login"
-                    sx={{ mt: 4 }}
-                >
-                    Log In
-                </Button>
-            </Container>
-        );
-    }
-
     // Fetch the specific theme
     let theme: Theme | null = null;
     let error: string | null = null;
@@ -76,7 +50,7 @@ export default async function EditThemePage({ params }: PageProps) {
             <Typography variant="h4" component="h1" gutterBottom>
                 Edit Theme
             </Typography>
-            <EditThemeForm theme={theme!} />
+            <EditThemeForm mode="edit" theme={theme!} />
         </Container>
     );
 }
