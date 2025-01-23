@@ -18,6 +18,7 @@ import {
     Box,
 } from "@mui/material";
 import { notFound, redirect } from "next/navigation";
+import RenderAnnualWheel from "@/components/RenderAnnualWheel";
 
 interface PageProps {
     params: {
@@ -63,6 +64,8 @@ export default async function AnnualWheelPage({ params }: PageProps) {
             <Typography variant="body1" gutterBottom>
                 {annualWheel.description || "No description provided."}
             </Typography>
+
+            <RenderAnnualWheel annualWheel={annualWheel} />
 
             <Divider sx={{ my: 4 }} />
 

@@ -7,5 +7,4 @@ export interface Event {
     name: string;
     startDate: Date;
     endDate?: Date | null;     // Nullable for single-day events
-    itemCount: number;         // Defaults to 1
 }
