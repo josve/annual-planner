@@ -24,7 +24,7 @@ export async function getAllThemes(): Promise<Theme[]> {
             eventArcColor: row.event_arc_color,
             labelColor: row.label_color,
             backgroundColor: row.background_color,
-            categoryColors: row.category_colors ? JSON.parse(row.category_colors) : undefined,
+            categoryColors: row.category_colors
         }));
 
         return themes;
@@ -67,7 +67,7 @@ export async function getThemeById(id: number | undefined): Promise<Theme | null
             eventArcColor: row.event_arc_color,
             labelColor: row.label_color,
             backgroundColor: row.background_color,
-            categoryColors: row.category_colors ? JSON.parse(row.category_colors) : undefined,
+            categoryColors: row.category_colors
         };
 
         return theme;

@@ -4,7 +4,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createTheme as createThemeAPI } from "@/data/Theme";
 import {
     Container,
     Typography,
@@ -12,8 +11,8 @@ import {
     Button,
     Box,
     Grid,
-    InputLabel,
-    FormControl,
+    Chip,
+    Alert,
 } from "@mui/material";
 
 export default function CreateThemePage() {
@@ -26,6 +25,8 @@ export default function CreateThemePage() {
     const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
     const [categoryColors, setCategoryColors] = useState<string[]>(["#FF5733", "#33FF57", "#3357FF"]);
     const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const handleCategoryColorChange = (index: number, value: string) => {
         const updatedColors = [...categoryColors];
@@ -44,6 +45,8 @@ export default function CreateThemePage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
+        setSuccess(null);
 
         // Basic validation
         if (!name) {
@@ -51,20 +54,41 @@ export default function CreateThemePage() {
             return;
         }
 
+        setIsSubmitting(true);
+
         try {
-            await createThemeAPI({
-                name,
-                description: description || undefined,
-                monthArcColor,
-                eventArcColor,
-                labelColor,
-                backgroundColor,
-                categoryColors,
+            const response = await fetch("/api/themes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name,
+                    description: description || undefined,
+                    monthArcColor,
+                    eventArcColor,
+                    labelColor,
+                    backgroundColor,
+                    categoryColors,
+                }),
             });
-            router.push("/themes");
-        } catch (err) {
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Something went wrong.");
+            }
+
+            setSuccess("Theme created successfully!");
+            // Optionally, redirect to themes page after a short delay
+            setTimeout(() => {
+                router.push("/themes");
+            }, 1500);
+        } catch (err: any) {
             console.error("Error creating theme:", err);
-            setError("Failed to create theme. Please try again.");
+            setError(err.message || "Failed to create theme. Please try again.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -74,9 +98,14 @@ export default function CreateThemePage() {
                 Create New Theme
             </Typography>
             {error && (
-                <Typography variant="body1" color="error" gutterBottom>
+                <Alert severity="error" sx={{ mb: 3 }}>
                     {error}
-                </Typography>
+                </Alert>
+            )}
+            {success && (
+                <Alert severity="success" sx={{ mb: 3 }}>
+                    {success}
+                </Alert>
             )}
             <Box component="form" onSubmit={handleSubmit} noValidate>
                 <TextField
@@ -173,6 +202,7 @@ export default function CreateThemePage() {
                                 variant="outlined"
                                 color="error"
                                 onClick={() => handleRemoveCategoryColor(index)}
+                                disabled={categoryColors.length === 1} // Prevent removing all colors
                             >
                                 Remove
                             </Button>
@@ -182,10 +212,9 @@ export default function CreateThemePage() {
                         Add Category Color
                     </Button>
                 </Box>
-                <Button type="submit" variant="contained" color="primary" fullWidth>
-                    Create Theme
+                <Button type="submit" variant="contained" color="primary" fullWidth disabled={isSubmitting}>
+                    {isSubmitting ? "Creating..." : "Create Theme"}
                 </Button>
             </Box>
-        </Container>
-    );
+        </Container>);
 }
