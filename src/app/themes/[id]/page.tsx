@@ -26,15 +26,6 @@ export default async function ViewThemePage({ params }: PageProps) {
     const { id } = params;
     const themeId = parseInt(id, 10);
 
-    // Fetch the current session
-    const session: any = await getServerSession(authOptions);
-
-    if (!session) {
-        redirect("/login");
-    }
-
-    const user = session.user;
-
     // Fetch the specific theme
     const theme: Theme | null = await getThemeById(themeId);
 
