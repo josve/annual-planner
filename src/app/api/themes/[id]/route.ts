@@ -7,10 +7,13 @@ import { authOptions } from "@/auth";
 import {Theme} from "@/types/Theme";
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-    // Retrieve the current user's session
     const session: any = await getServerSession(authOptions);
 
     if (!session) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.user.role !== "admin") {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -80,6 +83,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const session: any = await getServerSession(authOptions);
 
     if (!session) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.user.role !== "admin") {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
