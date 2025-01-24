@@ -318,11 +318,11 @@ export async function updateAnnualWheel(
                                 }
                                 if (startDate !== undefined) {
                                     eventFields.push("start_date = ?");
-                                    eventValues.push(startDate);
+                                    eventValues.push(new Date(startDate).toLocaleDateString('sv-SE'));
                                 }
                                 if (endDate !== undefined) {
                                     eventFields.push("end_date = ?");
-                                    eventValues.push(endDate);
+                                    eventValues.push(endDate ? new Date(endDate).toLocaleDateString('sv-SE') : null);
                                 }
 
                                 if (eventFields.length > 0) {
@@ -340,7 +340,7 @@ export async function updateAnnualWheel(
 
                                 await connection.query(
                                     "INSERT INTO events (wheel_id, category_id, name, start_date, end_date) VALUES (?, ?, ?, ?, ?)",
-                                    [id, categoryUpdate.id, name, startDate, endDate || null]
+                                    [id, categoryUpdate.id, name, new Date(startDate).toLocaleDateString('sv-SE'), endDate ? new Date(endDate).toLocaleDateString('sv-SE') : null]
                                 );
                             }
                         }
