@@ -48,7 +48,7 @@ export default async function AnnualWheelPage({ params }: PageProps) {
     }
 
     return (
-        <AnnualWheelClient annualWheel={annualWheel}/>
+        <AnnualWheelClient initialAnnualWheel={annualWheel}/>
 
     );
 }

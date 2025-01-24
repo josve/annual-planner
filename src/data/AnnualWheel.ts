@@ -266,7 +266,7 @@ export async function updateAnnualWheel(
             const updatedCategoryIds: number[] = [];
 
             for (const categoryUpdate of updates.categories) {
-                if (categoryUpdate.id) {
+                if (categoryUpdate.id && categoryUpdate.id >= 0) {
                     // Existing category: update
                     const {id: categoryId, name, defaultColor, events} = categoryUpdate;
 
@@ -305,7 +305,7 @@ export async function updateAnnualWheel(
                         const updatedEventIds: number[] = [];
 
                         for (const eventUpdate of events) {
-                            if (eventUpdate.id) {
+                            if (eventUpdate.id && eventUpdate.id >= 0) {
                                 // Existing event: update
                                 const {id: eventId, name, startDate, endDate } = eventUpdate;
 

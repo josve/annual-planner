@@ -15,7 +15,7 @@ const AnnualWheelLegend: React.FC<AnnualWheelLegendProps> = ({ categories }) => 
     if (categories.length === 0) {
         return (<></>);
     }
-    
+
     return (
         <Box sx={{ mt: 4 }}>
             <Typography variant="h6" gutterBottom>
