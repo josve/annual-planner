@@ -12,6 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: "Nytt årshjul - Årsplanering",
     };
 }
+
 export default async function CreateAnnualWheelPage() {
     let themes: Theme[] = await getAllThemes();
 

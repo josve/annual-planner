@@ -183,13 +183,14 @@ export async function createAnnualWheel(
     userId: number,
     year: number,
     themeId: number
-): Promise<void> {
+): Promise<number> {
     const connection = await Connection.getInstance().getConnection();
     try {
-        await connection.query(
+        const [result]: any = await connection.query(
             "INSERT INTO annual_wheels (name, description, user_id, year, theme_id) VALUES (?, ?, ?, ?, ?)",
             [name, description, userId, year, themeId]
         );
+        return result.insertId;
     } catch (error) {
         console.error("Error creating annual wheel:", error);
         throw error;
