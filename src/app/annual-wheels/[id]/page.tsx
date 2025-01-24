@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { notFound, redirect } from "next/navigation";
 import RenderAnnualWheel from "@/components/RenderAnnualWheel";
+import AnnualWheelClient from "@/components/AnnualWheelClient";
 
 interface PageProps {
     params: {
@@ -27,7 +28,7 @@ interface PageProps {
 }
 
 export default async function AnnualWheelPage({ params }: PageProps) {
-    const { id } = params;
+    const { id } = await params;
     const wheelId = parseInt(id, 10);
 
     // Fetch the current session
@@ -47,72 +48,7 @@ export default async function AnnualWheelPage({ params }: PageProps) {
     }
 
     return (
-        <Container maxWidth="md" sx={{ py: 8 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                <Typography variant="h4" component="h1">
-                    {annualWheel.name} ({annualWheel.year})
-                </Typography>
-                <Button
-                    variant="outlined"
-                    color="secondary"
-                    component={Link}
-                    href={`/annual-wheels/${wheelId}/edit`}
-                >
-                    Edit
-                </Button>
-            </Box>
-            <Typography variant="body1" gutterBottom>
-                {annualWheel.description || "No description provided."}
-            </Typography>
+        <AnnualWheelClient annualWheel={annualWheel}/>
 
-            <RenderAnnualWheel annualWheel={annualWheel} />
-
-            <Divider sx={{ my: 4 }} />
-
-            <Typography variant="h5" gutterBottom>
-                Categories
-            </Typography>
-            {annualWheel.categories.length === 0 ? (
-                <Typography>No categories available.</Typography>
-            ) : (
-                annualWheel.categories.map((category) => (
-                    <Card key={category.id} sx={{ mb: 3 }}>
-                        <CardContent>
-                            <Typography variant="h6" component="h2">
-                                {category.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                                Default Color: {category.defaultColor}
-                            </Typography>
-                            <Typography variant="subtitle1">Events:</Typography>
-                            {category.events.length === 0 ? (
-                                <Typography variant="body2">No events in this category.</Typography>
-                            ) : (
-                                <List>
-                                    {category.events.map((event) => (
-                                        <ListItem key={event.id} disableGutters>
-                                            <ListItemText
-                                                primary={event.name}
-                                                secondary={`${event.startDate.toDateString()} ${
-                                                    event.endDate ? `to ${event.endDate.toDateString()}` : ""
-                                                } (${event.itemCount} item${
-                                                    event.itemCount !== 1 ? "s" : ""
-                                                })`}
-                                            />
-                                        </ListItem>
-                                    ))}
-                                </List>
-                            )}
-                        </CardContent>
-                    </Card>
-                ))
-            )}
-
-            <Box mt={4}>
-                <Button variant="contained" color="primary" component={Link} href="/">
-                    Back to Home
-                </Button>
-            </Box>
-        </Container>
     );
 }

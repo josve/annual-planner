@@ -23,7 +23,7 @@ interface PageProps {
 }
 
 export default async function ViewThemePage({ params }: PageProps) {
-    const { id } = params;
+    const { id } = await params;
     const themeId = parseInt(id, 10);
 
     // Fetch the specific theme

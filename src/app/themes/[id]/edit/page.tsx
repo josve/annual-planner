@@ -1,7 +1,7 @@
 // app/themes/[id]/edit/page.tsx
 
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth"; // Adjust the import path based on your project structure
+import { authOptions } from "@/auth";
 import { getThemeById } from "@/data/Theme";
 import { Theme } from "@/types/Theme";
 import { Container, Typography, Button, Box } from "@mui/material";
@@ -15,7 +15,7 @@ interface PageProps {
 }
 
 export default async function EditThemePage({ params }: PageProps) {
-    const { id } = params;
+    const { id } = await params;
     const themeId = parseInt(id, 10);
 
     // Fetch the specific theme
