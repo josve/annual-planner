@@ -14,6 +14,7 @@ interface Props {
 interface EventDataWithCount extends Event {
     itemCount?: number; // Optional property to hold the count
     index?: number
+    month?: number;
 }
 
 const RenderAnnualWheel: React.FC<Props> = ({ annualWheel }) => {
@@ -27,7 +28,7 @@ const RenderAnnualWheel: React.FC<Props> = ({ annualWheel }) => {
 
     return (
         <div style={{ textAlign: "center" }}>
-            <svg ref={svgRef} viewBox="0 0 700 700" width="100%" height="auto" />
+            <svg ref={svgRef} viewBox="0 0 700 700" width="100%" height="100%" />
             <div
                 id="tooltip"
                 style={{
@@ -184,8 +185,8 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number, an
 
     // Convert startMonth/endMonth to angles
     const eventData = eventsWithCount.map((ev) => {
-        const startA = monthToAngle(ev.startDate.getMonth()) + (Math.PI / 2);
-        const endA = monthToAngle(ev.startDate.getMonth() + 1) + (Math.PI / 2);
+        const startA = monthToAngle(new Date(ev.startDate).getMonth()) + (Math.PI / 2);
+        const endA = monthToAngle(new Date(ev.startDate).getMonth() + 1) + (Math.PI / 2);
         const diff = (endA - startA) / ev.itemCount!;
         const adjStart = startA + (diff * ev.index!);
         const adjEnd = adjStart + diff;
@@ -253,14 +254,21 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number, an
  * @param events - Array of events to process.
  * @returns A new array of events with the `itemCount` property added.
  */
-function addItemCountToEvents(events: any[]): EventDataWithCount[] {
+function addItemCountToEvents(events: Event[]): EventDataWithCount[] {
     // Step 1: Count the number of events in each month
     const monthCounts: Record<number, number> = {};
+    const newEvents: EventDataWithCount[] = [];
     events.forEach(event => {
-        if (monthCounts[event.month]) {
-            monthCounts[event.month] += 1;
+        const month = new Date(event.startDate).getMonth();
+        newEvents.push({
+            ...event,
+            month: month,
+        });
+
+        if (monthCounts[month]) {
+            monthCounts[month] += 1;
         } else {
-            monthCounts[event.month] = 1;
+            monthCounts[month] = 1;
         }
     });
 
@@ -278,10 +286,10 @@ function addItemCountToEvents(events: any[]): EventDataWithCount[] {
     }
 
     // Step 2: Assign the `itemCount` to each event
-    const updatedEvents = events.map(event => ({
+    const updatedEvents = newEvents.map(event => ({
         ...event,
-        itemCount: monthCounts[event.month],
-        index: getIndex(event.month)
+        itemCount: monthCounts[event.month!],
+        index: getIndex(event.month!)
     }));
 
     return updatedEvents;

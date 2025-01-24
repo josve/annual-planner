@@ -16,9 +16,11 @@ import RenderAnnualWheel from "@/components/RenderAnnualWheel";
 import AnnualWheelLegend from "@/components/AnnualWheelLegend";
 import AnnualWheelEditPanel from "@/components/AnnualWheelEditPanel"; // To be created
 import axios from "axios";
+import { Theme } from "@/types/Theme";
 
 interface Props {
     initialAnnualWheel: AnnualWheelWithCategories;
+    themes: Theme[];
 }
 
 const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
@@ -42,8 +44,10 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
     const handleSave = async (updatedWheel: AnnualWheelWithCategories) => {
         try {
             const response = await axios.post("/api/annual-wheels/" + annualWheel?.id, updatedWheel);
-            if (response.status === 200) {
-                setAnnualWheel(updatedWheel);
+            if (response.status === 201) {
+                const updateFromServer: AnnualWheelWithCategories = response.data // Parse JSON response
+                console.log(updateFromServer);
+                setAnnualWheel(updateFromServer);
                 setSuccess("Annual Wheel updated successfully!");
                 handleCloseEditPanel();
             }
@@ -93,6 +97,7 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
                 anchor="right"
                 open={isEditPanelOpen}
                 onClose={handleCloseEditPanel}
+                sx={{ zIndex: 99999 }}
                 PaperProps={{ sx: { width: { xs: '100%', sm: 400 } } }}
             >
                 <AnnualWheelEditPanel
@@ -102,7 +107,6 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
                 />
             </Drawer>
 
-            {/* Success and Error Alerts */}
             {success && (
                 <Box position="fixed" bottom={16} right={16}>
                     <Typography variant="body1" color="success.main">

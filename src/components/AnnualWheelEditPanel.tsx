@@ -11,7 +11,7 @@ import {
     Button,
     Divider,
     IconButton,
-    Stack,
+    Stack, Fab,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import {CategoryWithEvents} from "@/types/Category"; // For generating unique IDs for new categories/events
@@ -214,18 +214,6 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                                         type="date"
                                         value={event.startDate.toISOString().substr(0, 10)}
                                         onChange={(e) => handleEventChange(category.id, event.id, 'startDate', new Date(e.target.value))}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        sx={{ mb: 2 }}
-                                    />
-                                    <TextField
-                                        label="End Date"
-                                        variant="outlined"
-                                        fullWidth
-                                        type="date"
-                                        value={event.endDate ? event.endDate.toISOString().substr(0, 10) : ""}
-                                        onChange={(e) => handleEventChange(category.id, event.id, 'endDate', e.target.value ? new Date(e.target.value) : undefined)}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}

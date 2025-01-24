@@ -1,7 +1,7 @@
 // app/api/annual-wheels/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import {createAnnualWheel, updateAnnualWheel} from "@/data/AnnualWheel";
+import {createAnnualWheel, getAnnualWheelById, updateAnnualWheel} from "@/data/AnnualWheel";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import {AnnualWheel, AnnualWheelWithCategories} from "@/types/AnnualWheel";
@@ -47,7 +47,9 @@ export async function POST(request: NextRequest) {
             body.id,
             body);
 
-        return NextResponse.json({ message: "Annual Wheel updated successfully." }, { status: 201 });
+        const updated = await getAnnualWheelById(body.id);
+
+        return NextResponse.json(updated, { status: 201 });
     } catch (error: any) {
         console.error("Error creating Annual Wheel:", error);
         return NextResponse.json({ message: "Internal Server Error." }, { status: 500 });
