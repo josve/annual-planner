@@ -17,9 +17,9 @@ import { notFound, redirect } from "next/navigation";
 import React from "react";
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export default async function ViewThemePage({ params }: PageProps) {

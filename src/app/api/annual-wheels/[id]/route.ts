@@ -7,7 +7,7 @@ import { authOptions } from "@/auth";
 import {AnnualWheelWithCategories} from "@/types/AnnualWheel";
 import { getThemeById } from "@/data/Theme";
 
-export async function POST(request: NextRequest) {
+export async function PUT(request: NextRequest) {
     const session: any = await getServerSession(authOptions);
 
     if (!session) {

@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { Theme } from "@/types/Theme";
+import {updateThemeAction} from "@/app/lib/themesActions";
 
 interface EditThemeFormProps {
     mode: "create" | "edit";
@@ -91,7 +92,7 @@ const EditThemeForm: React.FC<EditThemeFormProps> = ({ mode, theme }) => {
             let response;
             if (mode === "edit" && theme) {
                 // Update existing theme
-                response = await axios.put(`/api/themes/${theme.id}`, {
+                await updateThemeAction(theme.id, {
                     name,
                     description: description || undefined,
                     monthArcColor,
@@ -100,6 +101,9 @@ const EditThemeForm: React.FC<EditThemeFormProps> = ({ mode, theme }) => {
                     backgroundColor,
                     categoryColors,
                 });
+                response = {
+                    status: 201
+                };
             } else {
                 // Create new theme
                 response = await axios.post(`/api/themes`, {

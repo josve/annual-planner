@@ -1,9 +1,8 @@
-// components/ThemeCard.tsx
-
 "use client";
 
 import React, { useState } from "react";
 import { Theme } from "@/types/Theme";
+import { deleteThemeAction } from "@/app/lib/themesActions";
 import Link from "next/link";
 import {
     Card,
@@ -20,7 +19,6 @@ import {
     DialogActions,
     Chip,
 } from "@mui/material";
-import axios from "axios";
 
 interface ThemeCardProps {
     theme: Theme;
@@ -44,9 +42,8 @@ const ThemeCard: React.FC<ThemeCardProps> = ({ theme }) => {
         setIsDeleting(true);
         setDeleteError(null);
         try {
-            await axios.delete(`/api/themes/${theme.id}`);
-            // Optionally, implement a state management solution or refetch themes
-            window.location.reload(); // Simple approach to refresh the page
+            await deleteThemeAction(theme.id);
+            window.location.reload();
         } catch (error: any) {
             console.error("Error deleting theme:", error);
             setDeleteError(error.response?.data?.message || "Failed to delete theme.");

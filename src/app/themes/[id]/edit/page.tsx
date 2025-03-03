@@ -1,7 +1,5 @@
 // app/themes/[id]/edit/page.tsx
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
 import { getThemeById } from "@/data/Theme";
 import { Theme } from "@/types/Theme";
 import { Container, Typography, Button, Box } from "@mui/material";
@@ -9,9 +7,9 @@ import Link from "next/link";
 import EditThemeForm from "@/components/EditThemeForm"; // Client-side component to be created
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export default async function EditThemePage({ params }: PageProps) {

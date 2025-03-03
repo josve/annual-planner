@@ -11,10 +11,10 @@ export async function generateMetadata(): Promise<Metadata> {
     };
 }
 
-export default function LoginPage({
+export default async function LoginPage({
                                       searchParams,
                                   }: {
-    searchParams: { callbackUrl?: string };
+    searchParams: Promise<{ callbackUrl?: string }>;
 }) {
     const providers = Object.values(providerMap);
     const providerInfo: any[] = [];
@@ -22,11 +22,13 @@ export default function LoginPage({
         providerInfo.push({id: provider.id, name: provider.name});
     });
 
+    const { callbackUrl } = await searchParams;
+
     return (
         <SignInForm
             providers={providerInfo}
             showLoginForm={!!process.env.DEV_MOCK_PWD}
-            callbackUrl={searchParams.callbackUrl ?? "/"}
+            callbackUrl={callbackUrl ?? "/"}
         />
     );
 }

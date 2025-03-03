@@ -10,9 +10,9 @@ import {getAllThemes} from "@/data/Theme";
 import {Metadata} from "next";
 
 interface PageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
