@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { Theme } from "@/types/Theme";
-import {updateThemeAction} from "@/app/lib/themesActions";
+import {createThemeAction, updateThemeAction} from "@/app/lib/themesActions";
 
 interface EditThemeFormProps {
     mode: "create" | "edit";
@@ -106,7 +106,7 @@ const EditThemeForm: React.FC<EditThemeFormProps> = ({ mode, theme }) => {
                 };
             } else {
                 // Create new theme
-                response = await axios.post(`/api/themes`, {
+                await createThemeAction({
                     name,
                     description: description || undefined,
                     monthArcColor,
@@ -115,6 +115,9 @@ const EditThemeForm: React.FC<EditThemeFormProps> = ({ mode, theme }) => {
                     backgroundColor,
                     categoryColors,
                 });
+                response = {
+                    status: 200
+                };
             }
 
             if (response.status === 200 || response.status === 201) {

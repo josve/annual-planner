@@ -5,8 +5,20 @@ import { Theme } from "@/types/Theme";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
 import ThemeList from "@/components/ThemeList";
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/auth";
+import {notFound} from "next/navigation";
 
 export default async function ListThemesPage() {
+    const session: any = await getServerSession(authOptions);
+
+    if (!session) {
+        notFound();
+    }
+
+    if (session.user.role !== "admin") {
+        notFound();
+    }
 
     // Fetch all themes
     let themes: Theme[] = await getAllThemes();

@@ -1,10 +1,11 @@
-// app/themes/[id]/edit/page.tsx
-
 import { getThemeById } from "@/data/Theme";
 import { Theme } from "@/types/Theme";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
-import EditThemeForm from "@/components/EditThemeForm"; // Client-side component to be created
+import EditThemeForm from "@/components/EditThemeForm";
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/auth";
+import {notFound} from "next/navigation";
 
 interface PageProps {
     params: Promise<{
@@ -13,6 +14,16 @@ interface PageProps {
 }
 
 export default async function EditThemePage({ params }: PageProps) {
+    const session: any = await getServerSession(authOptions);
+
+    if (!session) {
+        notFound();
+    }
+
+    if (session.user.role !== "admin") {
+        notFound();
+    }
+
     const { id } = await params;
     const themeId = parseInt(id, 10);
 

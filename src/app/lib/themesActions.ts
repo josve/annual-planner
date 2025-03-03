@@ -4,20 +4,22 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/auth";
 import {createTheme, deleteTheme, getThemeById, updateTheme} from "@/data/Theme";
 import {Theme} from "@/types/Theme";
-import {NextRequest, NextResponse} from "next/server";
 
 export async function createThemeAction(body: Partial<Theme>) {
-    // Retrieve the current user's session
     const session: any = await getServerSession(authOptions);
 
     if (!session) {
         return { message: "Unauthorized" };
     }
 
+    if (session.user.role !== "admin") {
+        return { message: "Unauthorized" };
+    }
+
     try {
         // Basic validation
         if (!body.name) {
-            return { message: "Theme name is required." }, { status: 400 });
+            return { message: "Theme name is required." };
         }
 
         // Optional: Additional validation for colors and categoryColors
@@ -25,19 +27,19 @@ export async function createThemeAction(body: Partial<Theme>) {
         for (const field of colorFields) {
             const color = (body as any)[field];
             if (!/^#([0-9A-F]{3}){1,2}$/i.test(color)) {
-                return NextResponse.json({ message: `Invalid color format for ${field}.` }, { status: 400 });
+                return { message: `Invalid color format for ${field}.` };
             }
         }
 
         if (!Array.isArray(body.categoryColors)) {
-            return NextResponse.json({ message: "Category colors must be an array." }, { status: 400 });
+            return { message: "Category colors must be an array." };
         }
 
         // Optional: Validate each color in categoryColors
         for (let i = 0; i < body.categoryColors.length; i++) {
             const color = body.categoryColors[i];
             if (!/^#([0-9A-F]{3}){1,2}$/i.test(color)) {
-                return NextResponse.json({ message: `Invalid color format for category color at index ${i}.` }, { status: 400 });
+                return { message: `Invalid color format for category color at index ${i}.` };
             }
         }
 
@@ -45,17 +47,17 @@ export async function createThemeAction(body: Partial<Theme>) {
         await createTheme({
             name: body.name,
             description: body.description || undefined,
-            monthArcColor: body.monthArcColor,
-            eventArcColor: body.eventArcColor,
-            labelColor: body.labelColor,
-            backgroundColor: body.backgroundColor,
+            monthArcColor: body.monthArcColor!,
+            eventArcColor: body.eventArcColor!,
+            labelColor: body.labelColor!,
+            backgroundColor: body.backgroundColor!,
             categoryColors: body.categoryColors,
         });
 
-        return NextResponse.json({ message: "Theme created successfully." }, { status: 201 });
+        return { message: "Theme created successfully." };
     } catch (error: any) {
         console.error("Error creating theme:", error);
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        return { message: "Internal Server Error" };
     }
 }
 
