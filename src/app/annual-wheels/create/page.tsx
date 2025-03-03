@@ -1,5 +1,3 @@
-// app/annual-wheels/create/page.tsx
-
 import { getAllThemes } from "@/data/Theme";
 import { Theme } from "@/types/Theme";
 import { Container, Typography } from "@mui/material";

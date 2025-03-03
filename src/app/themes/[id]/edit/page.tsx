@@ -48,7 +48,7 @@ export default async function EditThemePage({ params }: PageProps) {
                     {error}
                 </Typography>
                 <Button variant="contained" color="primary" component={Link} href="/themes">
-                    Back to Themes
+                    Tillbaka till teman
                 </Button>
             </Container>
         );
@@ -57,7 +57,7 @@ export default async function EditThemePage({ params }: PageProps) {
     return (
         <Container maxWidth="sm" sx={{ py: 8 }}>
             <Typography variant="h4" component="h1" gutterBottom>
-                Edit Theme
+                Editera tema
             </Typography>
             <EditThemeForm mode="edit" theme={theme!} />
         </Container>

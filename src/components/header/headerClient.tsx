@@ -43,14 +43,16 @@ export default function HeaderClient({ session, avatarUrl }: Props) {
                 top: "0",
                 left: 0,
                 right: 0,
-                background: "#5C7E62",
+                background: "#cdd0c8",
                 boxShadow: 0,
             }}
         >
             <Toolbar>
                 <Box className="header-bar-box" sx={{display: "flex", alignItems: "center", flexGrow: 1}}>
                     <Link href="/" passHref>
-                        <Box sx={{display: "flex", alignItems: "center", cursor: "pointer"}}>
+                        <Box sx={{display: "flex",
+                            alignItems: "center",
+                            cursor: "pointer"}}>
                             <Image
                                 src="/logo.png"
                                 alt="Årshjul"
@@ -58,7 +60,10 @@ export default function HeaderClient({ session, avatarUrl }: Props) {
                                 width="40"
                                 height="48"
                             />
-                            <div className="header-title">Årshjul</div>
+                            <div className="header-title" style={{
+                                paddingLeft: 10,
+                                color: 'black',
+                            }}>Årsplanering</div>
                         </Box>
                     </Link>
                 </Box>
@@ -70,6 +75,9 @@ export default function HeaderClient({ session, avatarUrl }: Props) {
                             title={menuItem.name}
                             key={menuItem.url}
                             passHref
+                            style={{
+                                color: 'black',
+                            }}
                         >
                             {menuItem.name}
                         </Link>

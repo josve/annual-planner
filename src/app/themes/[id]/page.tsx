@@ -45,7 +45,7 @@ export default async function ViewThemePage({ params }: PageProps) {
         <Container maxWidth="md" sx={{ py: 8 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
                 <Typography variant="h4" component="h1">
-                    Theme Details
+                    Thema
                 </Typography>
                 <Box>
                     <Button
@@ -55,7 +55,7 @@ export default async function ViewThemePage({ params }: PageProps) {
                         href={`/themes/${theme.id}/edit`}
                         sx={{ mr: 2 }}
                     >
-                        Edit Theme
+                        Edita tema
                     </Button>
                     <Button
                         variant="contained"
@@ -63,7 +63,7 @@ export default async function ViewThemePage({ params }: PageProps) {
                         component={Link}
                         href={`/themes`}
                     >
-                        Back to Themes
+                        Tillbaks till teamn
                     </Button>
                 </Box>
             </Box>
@@ -79,12 +79,12 @@ export default async function ViewThemePage({ params }: PageProps) {
 
             <Box sx={{ mb: 4 }}>
                 <Typography variant="h6" gutterBottom>
-                    Colors
+                    Färger
                 </Typography>
                 <Grid container spacing={2}>
                     <Grid item>
                         <Chip
-                            label="Month Arc Color"
+                            label="Färg för månadsbåge"
                             sx={{
                                 backgroundColor: theme.monthArcColor,
                                 color: getContrastColor(theme.monthArcColor),
@@ -93,7 +93,7 @@ export default async function ViewThemePage({ params }: PageProps) {
                     </Grid>
                     <Grid item>
                         <Chip
-                            label="Event Arc Color"
+                            label="Färg för event"
                             sx={{
                                 backgroundColor: theme.eventArcColor,
                                 color: getContrastColor(theme.eventArcColor),
@@ -102,7 +102,7 @@ export default async function ViewThemePage({ params }: PageProps) {
                     </Grid>
                     <Grid item>
                         <Chip
-                            label="Label Color"
+                            label="Textfärg"
                             sx={{
                                 backgroundColor: theme.labelColor,
                                 color: getContrastColor(theme.labelColor),
@@ -111,7 +111,7 @@ export default async function ViewThemePage({ params }: PageProps) {
                     </Grid>
                     <Grid item>
                         <Chip
-                            label="Background Color"
+                            label="Bakgrundsfärg"
                             sx={{
                                 backgroundColor: theme.backgroundColor,
                                 color: getContrastColor(theme.backgroundColor),
@@ -123,14 +123,14 @@ export default async function ViewThemePage({ params }: PageProps) {
 
             <Box>
                 <Typography variant="h6" gutterBottom>
-                    Category Colors
+                    Kategorifärger
                 </Typography>
                 <Grid container spacing={2}>
                     {theme.categoryColors && theme.categoryColors.length > 0 ? (
                         theme.categoryColors.map((color, index) => (
                             <Grid item key={index}>
                                 <Chip
-                                    label={`Category ${index + 1}`}
+                                    label={`Kategori ${index + 1}`}
                                     sx={{
                                         backgroundColor: color,
                                         color: getContrastColor(color),
@@ -139,7 +139,7 @@ export default async function ViewThemePage({ params }: PageProps) {
                             </Grid>
                         ))
                     ) : (
-                        <Typography variant="body2">No category colors defined.</Typography>
+                        <Typography variant="body2">Inga kategorifärger definerade.</Typography>
                     )}
                 </Grid>
             </Box>
@@ -147,7 +147,6 @@ export default async function ViewThemePage({ params }: PageProps) {
     );
 }
 
-// Utility function to determine text color based on background color for readability
 function getContrastColor(hexColor: string): string {
     // Remove '#' if present
     hexColor = hexColor.replace("#", "");

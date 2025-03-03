@@ -27,7 +27,7 @@ export default async function ListThemesPage() {
         <Container maxWidth="lg" sx={{ py: 8 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
                 <Typography variant="h4" component="h1">
-                    Themes Management
+                    Hantera teman
                 </Typography>
                 <Button
                     variant="contained"
@@ -35,7 +35,7 @@ export default async function ListThemesPage() {
                     component={Link}
                     href="/themes/create"
                 >
-                    Create New Theme
+                    Skapa nytt tema
                 </Button>
             </Box>
 

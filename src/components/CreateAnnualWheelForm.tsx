@@ -84,7 +84,7 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
             )}
             <Box component="form" onSubmit={handleSubmit} noValidate>
                 <TextField
-                    label="Name"
+                    label="Namn"
                     variant="outlined"
                     fullWidth
                     required
@@ -93,7 +93,7 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
                     sx={{ mb: 3 }}
                 />
                 <TextField
-                    label="Description"
+                    label="Beskrivning"
                     variant="outlined"
                     fullWidth
                     multiline
@@ -103,7 +103,7 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
                     sx={{ mb: 3 }}
                 />
                 <TextField
-                    label="Year"
+                    label="År"
                     variant="outlined"
                     fullWidth
                     required
@@ -113,12 +113,12 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
                     sx={{ mb: 3 }}
                 />
                 <FormControl fullWidth required sx={{ mb: 3 }}>
-                    <InputLabel id="theme-select-label">Theme</InputLabel>
+                    <InputLabel id="theme-select-label">Tema</InputLabel>
                     <Select
                         labelId="theme-select-label"
                         id="theme-select"
                         value={themeId}
-                        label="Theme"
+                        label="Tema"
                         onChange={(e) => setThemeId(e.target.value as number)}
                     >
                         {themes.map((theme) => (
@@ -135,7 +135,7 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
                     fullWidth
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? "Creating..." : "Create Annual Wheel"}
+                    {isSubmitting ? "Skapar..." : "Skapa"}
                 </Button>
             </Box>
         </>

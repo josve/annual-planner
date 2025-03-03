@@ -1,5 +1,3 @@
-// components/AnnualWheelLegend.tsx
-
 "use client";
 
 import React from "react";
@@ -19,7 +17,7 @@ const AnnualWheelLegend: React.FC<AnnualWheelLegendProps> = ({ categories }) => 
     return (
         <Box sx={{ mt: 4 }}>
             <Typography variant="h6" gutterBottom>
-                Categories
+                Kategorier
             </Typography>
             <Stack direction="row" spacing={2} flexWrap="wrap">
                 {categories.map((category) => (

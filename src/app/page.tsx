@@ -15,6 +15,7 @@ import {
     CardActions,
     Box,
 } from "@mui/material";
+import {notFound} from "next/navigation";
 
 export default async function HomePage() {
     // Fetch the current session
@@ -22,25 +23,7 @@ export default async function HomePage() {
 
     // If no session exists, prompt the user to log in
     if (!session) {
-        return (
-            <Container maxWidth="md" sx={{ textAlign: "center", mt: 8 }}>
-                <Typography variant="h4" gutterBottom>
-                    Welcome to Annual Wheels Planner
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                    Please log in to access your Annual Wheels.
-                </Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    component={Link}
-                    href="/login"
-                    sx={{ mt: 4 }}
-                >
-                    Log In
-                </Button>
-            </Container>
-        );
+        return notFound();
     }
 
     // Extract user information from the session
@@ -60,7 +43,7 @@ export default async function HomePage() {
         <Container maxWidth="lg" sx={{ py: 8 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
                 <Typography variant="h4" component="h1">
-                    Welcome, {user.name}!
+                    Välkommen, {user.name}!
                 </Typography>
                 <Button
                     variant="contained"
@@ -68,7 +51,7 @@ export default async function HomePage() {
                     component={Link}
                     href="/annual-wheels/create"
                 >
-                    Create New Annual Wheel
+                    Skapa nytt årshjul
                 </Button>
             </Box>
 
@@ -102,52 +85,14 @@ export default async function HomePage() {
                                         component={Link}
                                         href={`/annual-wheels/${wheel.id}`}
                                     >
-                                        View Details
+                                        Visa
                                     </Button>
-                                    {/* Optionally, add an Edit button */}
-                                    {/* <Button
-                    size="small"
-                    color="secondary"
-                    component={Link}
-                    href={`/annual-wheels/${wheel.id}/edit`}
-                  >
-                    Edit
-                  </Button> */}
                                 </CardActions>
                             </Card>
                         </Grid>
                     ))}
                 </Grid>
             )}
-
-            {/* Optional: Additional Features */}
-            <Box mt={8}>
-                <Typography variant="h5" gutterBottom>
-                    Quick Actions
-                </Typography>
-                <Grid container spacing={2}>
-                    <Grid item>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            component={Link}
-                            href="/themes"
-                        >
-                            Manage Themes
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            variant="outlined"
-                            color="secondary"
-                            component={Link}
-                            href="/profile"
-                        >
-                            View Profile
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Box>
         </Container>
     );
 }

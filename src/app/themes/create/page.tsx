@@ -21,7 +21,7 @@ export default async function CreateThemePage() {
     return (
         <Container maxWidth="sm" sx={{ py: 8 }}>
             <Typography variant="h4" component="h1" gutterBottom>
-                Create New Theme
+                Skapa nytt tema
             </Typography>
             <EditThemeForm mode="create" />
         </Container>

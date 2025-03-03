@@ -1,5 +1,3 @@
-// app/annual-wheels/[id]/page.tsx
-
 import {getServerSession, Session} from "next-auth";
 import { authOptions } from "@/auth";
 import { getAnnualWheelById } from "@/data/AnnualWheel";
@@ -33,12 +31,10 @@ export default async function AnnualWheelPage({ params }: PageProps) {
     const { id } = await params;
     const wheelId = parseInt(id, 10);
 
-    // Fetch the current session
     const session: Session | null = await getServerSession(authOptions);
 
     const user = session!.user;
 
-    // Fetch the specific annual wheel
     const annualWheel: AnnualWheelWithCategories | null = await getAnnualWheelById(wheelId);
 
     const themes = await getAllThemes();
@@ -49,6 +45,5 @@ export default async function AnnualWheelPage({ params }: PageProps) {
 
     return (
         <AnnualWheelClient initialAnnualWheel={annualWheel} themes={themes}/>
-
     );
 }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/header/header";
-import Footer from "@/components/footer/footer";
 import React from "react";
 import Providers from "@/components/Providers";
 import LayoutContent from "@/components/LayoutContent";
@@ -40,7 +39,6 @@ export default async function RootLayout({
         <LayoutContent>
           {children}
         </LayoutContent>
-        <Footer/>
       </Providers>
       </body>
       </html>

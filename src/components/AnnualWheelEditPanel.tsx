@@ -1,8 +1,6 @@
-// components/AnnualWheelEditPanel.tsx
-
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AnnualWheelWithCategories } from "@/types/AnnualWheel";
 import {
     Box,
@@ -11,10 +9,9 @@ import {
     Button,
     Divider,
     IconButton,
-    Stack, Fab,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import {CategoryWithEvents} from "@/types/Category"; // For generating unique IDs for new categories/events
+import {CategoryWithEvents} from "@/types/Category";
 import {Event} from "@/types/Event";
 
 let currentValue = 0;
@@ -39,7 +36,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
     const handleAddCategory = () => {
         const newCategory: CategoryWithEvents = {
             id: getNewValue(), // Temporary ID, replace with server-generated ID upon saving
-            name: "New Category",
+            name: "Ny kategori",
             defaultColor: "#000000",
             wheelId: annualWheel.id,
             events: [],
@@ -60,7 +57,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
     const handleAddEvent = (categoryId: number) => {
         const newEvent: Event = {
             id: getNewValue(), // Temporary ID
-            name: "New Event",
+            name: "Ny händelse",
             wheelId: annualWheel.id,
             categoryId: categoryId,
             startDate: new Date(),
@@ -126,7 +123,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                 </Typography>
             )}
             <TextField
-                label="Name"
+                label="Namn"
                 variant="outlined"
                 fullWidth
                 required
@@ -135,7 +132,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                 sx={{ mb: 3 }}
             />
             <TextField
-                label="Description"
+                label="Beskrivning"
                 variant="outlined"
                 fullWidth
                 multiline
@@ -145,7 +142,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                 sx={{ mb: 3 }}
             />
             <TextField
-                label="Year"
+                label="År"
                 variant="outlined"
                 fullWidth
                 required
@@ -157,18 +154,18 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
 
             <Box>
                 <Typography variant="h6" gutterBottom>
-                    Categories
+                    Kategorier
                 </Typography>
                 {categories.map((category) => (
                     <Box key={category.id} sx={{ mb: 3, border: '1px solid #ccc', borderRadius: 2, p: 2 }}>
                         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                            <Typography variant="subtitle1">Category</Typography>
+                            <Typography variant="subtitle1">{category.name}</Typography>
                             <Button variant="text" color="error" onClick={() => handleRemoveCategory(category.id)}>
-                                Remove
+                                Radera
                             </Button>
                         </Box>
                         <TextField
-                            label="Category Name"
+                            label="Kategorinamn"
                             variant="outlined"
                             fullWidth
                             value={category.name}
@@ -176,7 +173,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                             sx={{ mb: 2 }}
                         />
                         <TextField
-                            label="Default Color"
+                            label="Färg"
                             variant="outlined"
                             type="color"
                             fullWidth
@@ -189,18 +186,18 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                         />
                         <Box>
                             <Typography variant="subtitle2" gutterBottom>
-                                Events
+                                Händelser
                             </Typography>
                             {category.events.map((event) => (
                                 <Box key={event.id} sx={{ mb: 2, border: '1px solid #ddd', borderRadius: 1, p: 1 }}>
                                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                                        <Typography variant="body2">Event</Typography>
+                                        <Typography variant="body2">{event.name}</Typography>
                                         <Button variant="text" color="error" size="small" onClick={() => handleRemoveEvent(category.id, event.id)}>
-                                            Remove
+                                            Radera
                                         </Button>
                                     </Box>
                                     <TextField
-                                        label="Event Name"
+                                        label="Namn"
                                         variant="outlined"
                                         fullWidth
                                         value={event.name}
@@ -208,7 +205,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                                         sx={{ mb: 2 }}
                                     />
                                     <TextField
-                                        label="Start Date"
+                                        label="Datum"
                                         variant="outlined"
                                         fullWidth
                                         type="date"
@@ -222,19 +219,19 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                                 </Box>
                             ))}
                             <Button variant="outlined" onClick={() => handleAddEvent(category.id)}>
-                                Add Event
+                                Ny händelse
                             </Button>
                         </Box>
                     </Box>
                 ))}
                 <Button variant="outlined" onClick={handleAddCategory}>
-                    Add Category
+                    Ny kategori
                 </Button>
             </Box>
 
             <Box display="flex" justifyContent="flex-end" mt={4}>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    Save
+                    Spara
                 </Button>
             </Box>
         </Box>

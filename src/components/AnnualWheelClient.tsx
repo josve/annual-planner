@@ -49,7 +49,7 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
                 const updateFromServer: AnnualWheelWithCategories = response.data!; // Parse JSON response
                 console.log(updateFromServer);
                 setAnnualWheel(updateFromServer);
-                setSuccess("Annual Wheel updated successfully!");
+                setSuccess("Updateringen klar!");
                 handleCloseEditPanel();
             }
         } catch (error: any) {
@@ -74,11 +74,11 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
                     color="secondary"
                     onClick={handleOpenEditPanel}
                 >
-                    Edit
+                    Editera
                 </Button>
             </Box>
             <Typography variant="body1" gutterBottom>
-                {annualWheel?.description || "No description provided."}
+                {annualWheel?.description || ""}
             </Typography>
 
             <RenderAnnualWheel annualWheel={annualWheel!} />
@@ -89,7 +89,7 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
 
             <Box mt={4}>
                 <Button variant="contained" color="primary" href="/">
-                    Back to Home
+                    Tillbaka hem
                 </Button>
             </Box>
 
