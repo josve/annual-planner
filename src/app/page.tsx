@@ -57,7 +57,7 @@ export default async function HomePage() {
 
             {annualWheels.length === 0 ? (
                 <Typography variant="h6">
-                    You have no Annual Wheels yet. Click the button above to create one.
+                    Du har inte skapat några årshjul än. Klicka på knappen ovan för att skapa en.
                 </Typography>
             ) : (
                 <Grid container spacing={4}>
