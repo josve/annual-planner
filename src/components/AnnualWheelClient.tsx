@@ -15,8 +15,9 @@ import {
 import RenderAnnualWheel from "@/components/RenderAnnualWheel";
 import AnnualWheelLegend from "@/components/AnnualWheelLegend";
 import AnnualWheelEditPanel from "@/components/AnnualWheelEditPanel"; // To be created
-import axios from "axios";
+
 import { Theme } from "@/types/Theme";
+import {updateAnnualWheelAction} from "@/app/lib/annualWheelsActions";
 
 interface Props {
     initialAnnualWheel: AnnualWheelWithCategories;
@@ -43,9 +44,9 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
 
     const handleSave = async (updatedWheel: AnnualWheelWithCategories) => {
         try {
-            const response = await axios.post("/api/annual-wheels/" + annualWheel?.id, updatedWheel);
+            const response = await updateAnnualWheelAction(updatedWheel);
             if (response.status === 201) {
-                const updateFromServer: AnnualWheelWithCategories = response.data // Parse JSON response
+                const updateFromServer: AnnualWheelWithCategories = response.data!; // Parse JSON response
                 console.log(updateFromServer);
                 setAnnualWheel(updateFromServer);
                 setSuccess("Annual Wheel updated successfully!");

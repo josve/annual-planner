@@ -12,7 +12,6 @@ import {
     Grid,
     Alert,
 } from "@mui/material";
-import axios from "axios";
 import { Theme } from "@/types/Theme";
 import {createThemeAction, updateThemeAction} from "@/app/lib/themesActions";
 

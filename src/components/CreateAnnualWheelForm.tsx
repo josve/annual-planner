@@ -5,7 +5,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-    Typography,
     TextField,
     Button,
     Box,
@@ -15,8 +14,8 @@ import {
     InputLabel,
     FormControl,
 } from "@mui/material";
-import axios from "axios";
 import { Theme } from "@/types/Theme";
+import {createAnnualWheelAction} from "@/app/lib/annualWheelsActions";
 
 interface CreateAnnualWheelFormProps {
     themes: Theme[];
@@ -46,7 +45,7 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post("/api/annual-wheels", {
+            const response = await createAnnualWheelAction({
                 name,
                 description: description || undefined,
                 year,
