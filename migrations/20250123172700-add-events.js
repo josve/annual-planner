@@ -38,19 +38,6 @@ exports.up = function(db, callback) {
         mapping: 'id'
       }
     },
-    category_id: {
-      type: 'int',
-      notNull: true,
-      foreignKey: {
-        name: 'events_category_fk',
-        table: 'categories',
-        rules: {
-          onDelete: 'CASCADE',
-          onUpdate: 'CASCADE'
-        },
-        mapping: 'id'
-      }
-    },
     name: {
       type: 'varchar',
       length: 255,

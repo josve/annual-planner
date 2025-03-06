@@ -1,16 +1,13 @@
-// src/types/AnnualWheel.ts
-
-import {CategoryWithEvents} from "@/types/Category";
+import { Event } from './Event';
 
 export interface AnnualWheel {
     id: number;
     name: string;
     description?: string;
-    userId: number;    // References User.id
-    year: number;      // e.g., 2024
-    themeId: number;   // References Theme.id
+    userId: number;
+    year: number;
 }
 
-export interface AnnualWheelWithCategories extends AnnualWheel {
-    categories: CategoryWithEvents[];
+export interface AnnualWheelWithEvents extends AnnualWheel {
+    events: Event[];
 }

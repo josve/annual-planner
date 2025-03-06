@@ -51,19 +51,6 @@ exports.up = function(db) {
       type: 'int',
       notNull: true
     },
-    theme_id: {
-      type: 'int',
-      notNull: true,
-      foreignKey: {
-        name: 'annual_wheels_theme_fk',
-        table: 'themes',
-        rules: {
-          onDelete: 'RESTRICT',
-          onUpdate: 'CASCADE'
-        },
-        mapping: 'id'
-      }
-    },
     created_at: {
       type: 'datetime',
       notNull: true,

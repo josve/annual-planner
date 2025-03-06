@@ -4,11 +4,11 @@
 
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { AnnualWheelWithCategories } from "@/types/AnnualWheel";
+import { AnnualWheelWithEvents } from "@/types/AnnualWheel";
 import { Event } from "@/types/Event";
 
 interface Props {
-    annualWheel: AnnualWheelWithCategories;
+    annualWheel: AnnualWheelWithEvents;
 }
 
 interface EventDataWithCount extends Event {
@@ -63,7 +63,7 @@ function monthToAngle(monthIndex: number): number {
 /**
  * Draw the D3-based "annual wheel" into an <svg> element.
  */
-function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number, annualWheel: AnnualWheelWithCategories) {
+function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number, annualWheel: AnnualWheelWithEvents) {
     // Clear previous render
     const svgRoot = d3.select(svgEl);
     svgRoot.selectAll("*").remove();
@@ -173,7 +173,7 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number, an
         .text((d) => d);
 
     // 3) Process Annual Wheel Data
-    const events = annualWheel.categories.flatMap(category => category.events);
+    const events = annualWheel.events;
 
     const eventsWithCount: EventDataWithCount[] = addItemCountToEvents(events);
 

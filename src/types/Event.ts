@@ -1,10 +1,7 @@
-// src/types/Event.ts
-
 export interface Event {
     id: number;
-    wheelId: number;          // References AnnualWheel.id
-    categoryId: number | null; // References Category.id, nullable if category is deleted
+    wheelId: number;
     name: string;
     startDate: Date;
-    endDate?: Date | null;     // Nullable for single-day events
+    endDate?: Date | null;
 }

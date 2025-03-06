@@ -1,41 +1,37 @@
-// lib/theme.ts
-
 import { createTheme } from "@mui/material/styles";
 
-// Define the color palette
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#53A045", // Main color 1
-            light: "#58CD83", // Main color 2
+            main: "#53A045",
+            light: "#58CD83",
         },
         secondary: {
-            main: "#55559C", // Base color
+            main: "#55559C",
         },
         background: {
-            default: "#FFFFFF", // Base background color
-            paper: "#FFFFFF", // Paper background color
+            default: "#FFFFFF",
+            paper: "#FFFFFF",
         },
         success: {
-            main: "#ADFFAA", // Accent color
+            main: "#ADFFAA",
         },
         info: {
-            main: "#005530", // Accent color
+            main: "#005530",
         },
         warning: {
-            main: "#F6E400", // Accent color
+            main: "#F6E400",
         },
         error: {
-            main: "#E85429", // Accent color
+            main: "#E85429",
         },
-        // Additional custom colors can be added here
     },
     typography: {
-        fontFamily: '"Karla", sans-serif', // Default font
+        fontFamily: '"Karla", sans-serif',
         h1: {
             fontFamily: '"Karla", sans-serif',
-            letterSpacing: "-0.02em", // Adjusted letter spacing
-            lineHeight: 1.2, // 90% of point size
+            letterSpacing: "-0.02em",
+            lineHeight: 1.2,
             fontWeight: 700,
         },
         h2: {
@@ -70,7 +66,7 @@ const theme = createTheme({
         },
         body1: {
             fontFamily: '"Karla", sans-serif',
-            lineHeight: 1.4, // 140% of point size
+            lineHeight: 1.4,
         },
         body2: {
             fontFamily: '"Karla", sans-serif',
@@ -80,12 +76,10 @@ const theme = createTheme({
             fontFamily: '"Karla", sans-serif',
             textTransform: "none",
         },
-        // You can customize other typography variants as needed
     },
     components: {
         MuiTypography: {
             defaultProps: {
-                // Ensure all Typography variants use the theme settings
                 variantMapping: {
                     h1: "h1",
                     h2: "h2",
@@ -101,7 +95,6 @@ const theme = createTheme({
                 },
             },
         },
-        // Additional component overrides can be added here
     },
 });
 

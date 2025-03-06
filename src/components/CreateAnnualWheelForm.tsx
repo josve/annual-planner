@@ -1,5 +1,3 @@
-// components/CreateAnnualWheelForm.tsx
-
 "use client";
 
 import React, { useState } from "react";
@@ -9,24 +7,17 @@ import {
     Button,
     Box,
     Alert,
-    MenuItem,
-    Select,
-    InputLabel,
-    FormControl,
 } from "@mui/material";
-import { Theme } from "@/types/Theme";
 import {createAnnualWheelAction} from "@/app/lib/annualWheelsActions";
 
 interface CreateAnnualWheelFormProps {
-    themes: Theme[];
 }
 
-const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes }) => {
+const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = () => {
     const router = useRouter();
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [year, setYear] = useState(new Date().getFullYear());
-    const [themeId, setThemeId] = useState<number | "">("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -37,7 +28,7 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
         setSuccess(null);
 
         // Basic validation
-        if (!name.trim() || !year || !themeId) {
+        if (!name.trim() || !year) {
             setError("Please fill in all required fields.");
             return;
         }
@@ -49,14 +40,13 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
                 name,
                 description: description || undefined,
                 year,
-                themeId: Number(themeId),
             });
 
             if (response.status === 201) {
                 setSuccess("Annual Wheel created successfully!");
                 // Optionally, redirect after a short delay
                 setTimeout(() => {
-                    router.push("/annual-wheels");
+                    router.push("/annual-wheels/" + response?.annualWheel?.id);
                 }, 1500);
             }
         } catch (err: any) {
@@ -112,22 +102,6 @@ const CreateAnnualWheelForm: React.FC<CreateAnnualWheelFormProps> = ({ themes })
                     onChange={(e) => setYear(parseInt(e.target.value, 10))}
                     sx={{ mb: 3 }}
                 />
-                <FormControl fullWidth required sx={{ mb: 3 }}>
-                    <InputLabel id="theme-select-label">Tema</InputLabel>
-                    <Select
-                        labelId="theme-select-label"
-                        id="theme-select"
-                        value={themeId}
-                        label="Tema"
-                        onChange={(e) => setThemeId(e.target.value as number)}
-                    >
-                        {themes.map((theme) => (
-                            <MenuItem key={theme.id} value={theme.id}>
-                                {theme.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
                 <Button
                     type="submit"
                     variant="contained"

@@ -3,7 +3,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth"; // Adjust the import path based on your project structure
 import { getAllAnnualWheels } from "@/data/AnnualWheel";
-import { AnnualWheelWithCategories } from "@/types/AnnualWheel";
+import { AnnualWheelWithEvents } from "@/types/AnnualWheel";
 import Link from "next/link";
 import {
     Container,
@@ -30,7 +30,7 @@ export default async function HomePage() {
     const user = session.user;
 
     // Fetch the user's annual wheels
-    let annualWheels: AnnualWheelWithCategories[] = [];
+    let annualWheels: AnnualWheelWithEvents[] = [];
 
     try {
         annualWheels = await getAllAnnualWheels(user.id);

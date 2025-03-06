@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AnnualWheelWithCategories } from "@/types/AnnualWheel";
+import { AnnualWheelWithEvents } from "@/types/AnnualWheel";
 import {
     Box,
     Typography,
@@ -11,7 +11,6 @@ import {
     IconButton,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import {CategoryWithEvents} from "@/types/Category";
 import {Event} from "@/types/Event";
 
 let currentValue = 0;
@@ -21,8 +20,8 @@ function getNewValue() {
 }
 
 interface AnnualWheelEditPanelProps {
-    annualWheel: AnnualWheelWithCategories;
-    onSave: (updatedWheel: AnnualWheelWithCategories) => void;
+    annualWheel: AnnualWheelWithEvents;
+    onSave: (updatedWheel: AnnualWheelWithEvents) => void;
     onClose: () => void;
 }
 
@@ -30,59 +29,28 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
     const [name, setName] = useState(annualWheel.name);
     const [description, setDescription] = useState(annualWheel.description || "");
     const [year, setYear] = useState(annualWheel.year);
-    const [categories, setCategories] = useState<CategoryWithEvents[]>(annualWheel.categories);
+    const [events, setEvents] = useState<Event[]>(annualWheel.events);
     const [error, setError] = useState<string | null>(null);
 
-    const handleAddCategory = () => {
-        const newCategory: CategoryWithEvents = {
-            id: getNewValue(), // Temporary ID, replace with server-generated ID upon saving
-            name: "Ny kategori",
-            defaultColor: "#000000",
-            wheelId: annualWheel.id,
-            events: [],
-        };
-        setCategories([...categories, newCategory]);
-    };
-
-    const handleRemoveCategory = (id: number) => {
-        setCategories(categories.filter(category => category.id !== id));
-    };
-
-    const handleCategoryChange = (id: number, field: keyof CategoryWithEvents, value: string) => {
-        setCategories(categories.map(category =>
-            category.id === id ? { ...category, [field]: value } : category
-        ));
-    };
-
-    const handleAddEvent = (categoryId: number) => {
+    const handleAddEvent = () => {
         const newEvent: Event = {
             id: getNewValue(), // Temporary ID
             name: "Ny händelse",
             wheelId: annualWheel.id,
-            categoryId: categoryId,
             startDate: new Date(),
             endDate: undefined,
         };
-        setCategories(categories.map(category =>
-            category.id === categoryId ? { ...category, events: [...category.events, newEvent] } : category
-        ));
+        setEvents([...events, newEvent]);
     };
 
-    const handleRemoveEvent = (categoryId: number, eventId: number) => {
-        setCategories(categories.map(category =>
-            category.id === categoryId ? { ...category, events: category.events.filter(event => event.id !== eventId) } : category
-        ));
+    const handleRemoveEvent = (eventId: number) => {
+        setEvents(events.filter(event => event.id !== eventId));
     };
 
-    const handleEventChange = (categoryId: number, eventId: number, field: keyof Event, value: any) => {
-        setCategories(categories.map(category =>
-            category.id === categoryId ? {
-                ...category,
-                events: category.events.map(event =>
+    const handleEventChange = (eventId: number, field: keyof Event, value: any) => {
+        setEvents(events.map(event =>
                     event.id === eventId ? { ...event, [field]: value } : event
-                )
-            } : category
-        ));
+                ));
     };
 
     const handleSubmit = () => {
@@ -97,12 +65,12 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
         }
         // Further validations can be added here
 
-        const updatedWheel: AnnualWheelWithCategories = {
+        const updatedWheel: AnnualWheelWithEvents = {
             ...annualWheel,
             name,
             description,
             year,
-            categories,
+            events,
         };
 
         onSave(updatedWheel);
@@ -156,43 +124,15 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                 <Typography variant="h6" gutterBottom>
                     Kategorier
                 </Typography>
-                {categories.map((category) => (
-                    <Box key={category.id} sx={{ mb: 3, border: '1px solid #ccc', borderRadius: 2, p: 2 }}>
-                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                            <Typography variant="subtitle1">{category.name}</Typography>
-                            <Button variant="text" color="error" onClick={() => handleRemoveCategory(category.id)}>
-                                Radera
-                            </Button>
-                        </Box>
-                        <TextField
-                            label="Kategorinamn"
-                            variant="outlined"
-                            fullWidth
-                            value={category.name}
-                            onChange={(e) => handleCategoryChange(category.id, 'name', e.target.value)}
-                            sx={{ mb: 2 }}
-                        />
-                        <TextField
-                            label="Färg"
-                            variant="outlined"
-                            type="color"
-                            fullWidth
-                            value={category.defaultColor}
-                            onChange={(e) => handleCategoryChange(category.id, 'defaultColor', e.target.value)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            sx={{ mb: 2 }}
-                        />
-                        <Box>
+                    <Box  sx={{ mb: 3, border: '1px solid #ccc', borderRadius: 2, p: 2 }}>
                             <Typography variant="subtitle2" gutterBottom>
                                 Händelser
                             </Typography>
-                            {category.events.map((event) => (
+                            {events.map((event) => (
                                 <Box key={event.id} sx={{ mb: 2, border: '1px solid #ddd', borderRadius: 1, p: 1 }}>
                                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                                         <Typography variant="body2">{event.name}</Typography>
-                                        <Button variant="text" color="error" size="small" onClick={() => handleRemoveEvent(category.id, event.id)}>
+                                        <Button variant="text" color="error" size="small" onClick={() => handleRemoveEvent(event.id)}>
                                             Radera
                                         </Button>
                                     </Box>
@@ -201,7 +141,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                                         variant="outlined"
                                         fullWidth
                                         value={event.name}
-                                        onChange={(e) => handleEventChange(category.id, event.id, 'name', e.target.value)}
+                                        onChange={(e) => handleEventChange( event.id, 'name', e.target.value)}
                                         sx={{ mb: 2 }}
                                     />
                                     <TextField
@@ -210,7 +150,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                                         fullWidth
                                         type="date"
                                         value={event.startDate.toISOString().substr(0, 10)}
-                                        onChange={(e) => handleEventChange(category.id, event.id, 'startDate', new Date(e.target.value))}
+                                        onChange={(e) => handleEventChange(event.id, 'startDate', new Date(e.target.value))}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
@@ -218,16 +158,11 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                                     />
                                 </Box>
                             ))}
-                            <Button variant="outlined" onClick={() => handleAddEvent(category.id)}>
+                            <Button variant="outlined" onClick={() => handleAddEvent()}>
                                 Ny händelse
                             </Button>
                         </Box>
                     </Box>
-                ))}
-                <Button variant="outlined" onClick={handleAddCategory}>
-                    Ny kategori
-                </Button>
-            </Box>
 
             <Box display="flex" justifyContent="flex-end" mt={4}>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>

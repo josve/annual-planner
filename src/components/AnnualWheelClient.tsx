@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { AnnualWheelWithCategories } from "@/types/AnnualWheel";
+import { AnnualWheelWithEvents } from "@/types/AnnualWheel";
 import {
     Box,
     Button,
@@ -13,19 +13,16 @@ import {
     Drawer,
 } from "@mui/material";
 import RenderAnnualWheel from "@/components/RenderAnnualWheel";
-import AnnualWheelLegend from "@/components/AnnualWheelLegend";
 import AnnualWheelEditPanel from "@/components/AnnualWheelEditPanel"; // To be created
 
-import { Theme } from "@/types/Theme";
 import {updateAnnualWheelAction} from "@/app/lib/annualWheelsActions";
 
 interface Props {
-    initialAnnualWheel: AnnualWheelWithCategories;
-    themes: Theme[];
+    initialAnnualWheel: AnnualWheelWithEvents;
 }
 
 const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
-    const [annualWheel, setAnnualWheel] = useState<AnnualWheelWithCategories | null>(null);
+    const [annualWheel, setAnnualWheel] = useState<AnnualWheelWithEvents | null>(null);
     const [isEditPanelOpen, setIsEditPanelOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
@@ -42,11 +39,11 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
         setIsEditPanelOpen(false);
     };
 
-    const handleSave = async (updatedWheel: AnnualWheelWithCategories) => {
+    const handleSave = async (updatedWheel: AnnualWheelWithEvents) => {
         try {
             const response = await updateAnnualWheelAction(updatedWheel);
             if (response.status === 201) {
-                const updateFromServer: AnnualWheelWithCategories = response.data!; // Parse JSON response
+                const updateFromServer: AnnualWheelWithEvents = response.data!; // Parse JSON response
                 console.log(updateFromServer);
                 setAnnualWheel(updateFromServer);
                 setSuccess("Updateringen klar!");
@@ -84,8 +81,6 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
             <RenderAnnualWheel annualWheel={annualWheel!} />
 
             <Divider sx={{ my: 4 }} />
-
-            <AnnualWheelLegend categories={annualWheel?.categories || []} />
 
             <Box mt={4}>
                 <Button variant="contained" color="primary" href="/">

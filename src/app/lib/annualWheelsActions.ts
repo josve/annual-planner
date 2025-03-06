@@ -2,8 +2,7 @@
 
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/auth";
-import {AnnualWheel, AnnualWheelWithCategories} from "@/types/AnnualWheel";
-import {getThemeById} from "@/data/Theme";
+import {AnnualWheel, AnnualWheelWithEvents} from "@/types/AnnualWheel";
 import {createAnnualWheel, getAnnualWheelById, updateAnnualWheel} from "@/data/AnnualWheel";
 
 export async function createAnnualWheelAction(body: Partial<AnnualWheel>) {
@@ -22,16 +21,7 @@ export async function createAnnualWheelAction(body: Partial<AnnualWheel>) {
             return { message: "Valid year is required.", status: 400 };
         }
 
-        if (!body.themeId || isNaN(body.themeId)) {
-            return { message: "Valid Theme ID is required." , status: 400 };
-        }
-
-        const theme = await getThemeById(body.themeId);
-        if (!theme) {
-            return { message: "Selected theme does not exist.", status: 400 };
-        }
-
-        const id = await createAnnualWheel(body.name, body.description ?? null, session.user.id, body.year, body.themeId);
+        const id = await createAnnualWheel(body.name, body.description ?? null, session.user.id, body.year);
         const annualWheel = await getAnnualWheelById(id);
 
         return {annualWheel, status: 201 };
@@ -41,7 +31,7 @@ export async function createAnnualWheelAction(body: Partial<AnnualWheel>) {
     }
 }
 
-export async function updateAnnualWheelAction(body: AnnualWheelWithCategories) {
+export async function updateAnnualWheelAction(body: AnnualWheelWithEvents) {
     const session: any = await getServerSession(authOptions);
 
     if (!session) {
@@ -61,16 +51,6 @@ export async function updateAnnualWheelAction(body: AnnualWheelWithCategories) {
 
         if (!body.year || isNaN(body.year)) {
             return { message: "Valid year is required.", status: 400 };
-        }
-
-        if (!body.themeId || isNaN(body.themeId)) {
-            return { message: "Valid Theme ID is required.", status: 400 };
-        }
-
-        // Validate that the theme exists
-        const theme = await getThemeById(body.themeId);
-        if (!theme) {
-            return { message: "Selected theme does not exist.", status: 400 };
         }
 
         await updateAnnualWheel(

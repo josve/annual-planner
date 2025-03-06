@@ -35,12 +35,6 @@ exports.up = function(db) {
       notNull: true,
       unique: true
     },
-    role: {
-      type: 'varchar',
-      length: 50,
-      notNull: false,
-      defaultValue: 'user' // Default role
-    },
     is_active: {
       type: 'boolean',
       notNull: false,
