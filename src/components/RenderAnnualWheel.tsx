@@ -6,6 +6,10 @@ import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { AnnualWheelWithEvents } from "@/types/AnnualWheel";
 import { Event } from "@/types/Event";
+import {Box, Button} from "@mui/material";
+import jsPDF from "jspdf";
+import PptxGenJS from "pptxgenjs";
+import { Canvg } from 'canvg';
 
 interface Props {
     annualWheel: AnnualWheelWithEvents;
@@ -17,6 +21,13 @@ interface EventDataWithCount extends Event {
     month?: number;
 }
 
+function svgToDataUrl(svgElement: SVGSVGElement): string {
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svgElement);
+    const base64 = window.btoa(unescape(encodeURIComponent(svgString)));
+    return "data:image/svg+xml;base64," + base64;
+}
+
 const RenderAnnualWheel: React.FC<Props> = ({ annualWheel }) => {
     const svgRef = useRef<SVGSVGElement>(null);
 
@@ -26,7 +37,58 @@ const RenderAnnualWheel: React.FC<Props> = ({ annualWheel }) => {
         }
     }, [annualWheel]);
 
+    const handleExportPDF = async () => {
+        if (!svgRef.current) return;
+        const svgElement = svgRef.current;
+
+        // Serialize the SVG
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svgElement);
+
+        // Create a canvas
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const width = svgElement.clientWidth;
+        const height = svgElement.clientHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        // Render the SVG onto the canvas using canvg
+        const v = await Canvg.fromString(context!, svgString);
+        await v.render();
+
+        // Get the PNG data URL
+        const pngDataUrl = canvas.toDataURL("image/png");
+
+        // Create PDF and add the PNG image
+        const pdf = new jsPDF({
+            orientation: "landscape",
+            unit: "pt",
+            format: "a4"
+        });
+        pdf.addImage(pngDataUrl, "PNG", 20, 20, 500, 500);
+        pdf.save("annual-wheel.pdf");
+    };
+
+    // Export to PowerPoint
+    const handleExportPPT = () => {
+        if (!svgRef.current) return;
+        const svgDataUrl = svgToDataUrl(svgRef.current);
+
+        const pptx = new PptxGenJS();
+        const slide = pptx.addSlide();
+        slide.addImage({
+            data: svgDataUrl,
+            x: 1,
+            y: 1,
+            w: 8,
+            h: 6
+        });
+        pptx.writeFile({ fileName: "annual-wheel.pptx" });
+    };
+
     return (
+        <Box>
         <div style={{ textAlign: "center" }}>
             <svg ref={svgRef} viewBox="0 0 700 700" width="100%" height="100%" />
             <div
@@ -43,7 +105,20 @@ const RenderAnnualWheel: React.FC<Props> = ({ annualWheel }) => {
                 }}
             ></div>
         </div>
-    );
+            <Box mt={4}>
+                <Button variant="contained" color="primary" href="/" style={{marginRight: 10}}>
+                    Tillbaka hem
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleExportPDF} style={{marginRight: 10}}>
+                    Spara som PDF
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleExportPPT}>
+                    Spara som Powerpoint
+                </Button>
+            </Box>
+        </Box>
+
+            );
 };
 
 export default RenderAnnualWheel;

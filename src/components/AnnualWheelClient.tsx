@@ -80,14 +80,6 @@ const AnnualWheelClient: React.FC<Props> = ({ initialAnnualWheel }) => {
 
             <RenderAnnualWheel annualWheel={annualWheel!} />
 
-            <Divider sx={{ my: 4 }} />
-
-            <Box mt={4}>
-                <Button variant="contained" color="primary" href="/">
-                    Tillbaka hem
-                </Button>
-            </Box>
-
             {/* Edit Panel */}
             <Drawer
                 anchor="right"

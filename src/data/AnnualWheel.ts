@@ -187,7 +187,7 @@ export async function updateAnnualWheel(
                     const {name, startDate, endDate} = eventUpdate;
 
                     await connection.query(
-                        "INSERT INTO events (wheel_id, name, start_date, end_date) VALUES (?, ?, ?, ?, ?)",
+                        "INSERT INTO events (wheel_id, name, start_date, end_date) VALUES (?, ?, ?, ?)",
                         [id, name, new Date(startDate).toLocaleDateString('sv-SE'), endDate ? new Date(endDate).toLocaleDateString('sv-SE') : null]
                     );
                 }
