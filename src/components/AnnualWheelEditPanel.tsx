@@ -79,7 +79,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
     return (
         <Box sx={{ p: 3, width: '100%', height: '100%', overflowY: 'auto' }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6">Edit Annual Wheel</Typography>
+                <Typography variant="h6">Ändra årshjulet</Typography>
                 <IconButton onClick={onClose}>
                     <CloseIcon />
                 </IconButton>
@@ -90,6 +90,45 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                     {error}
                 </Typography>
             )}
+            <Box>
+                <Typography variant="h6" gutterBottom>
+                    Händelser
+                </Typography>
+                {events.map((event) => (
+                    <Box key={event.id} sx={{ mb: 2, border: '1px solid #ddd', borderRadius: 1, p: 1 }}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                            <Typography variant="body2">{event.name}</Typography>
+                            <Button variant="text" color="error" size="small" onClick={() => handleRemoveEvent(event.id)}>
+                                Radera
+                            </Button>
+                        </Box>
+                        <TextField
+                            label="Namn"
+                            variant="outlined"
+                            fullWidth
+                            value={event.name}
+                            onChange={(e) => handleEventChange( event.id, 'name', e.target.value)}
+                            sx={{ mb: 2 }}
+                        />
+                        <TextField
+                            label="Datum"
+                            variant="outlined"
+                            fullWidth
+                            type="date"
+                            value={event.startDate.toISOString().substr(0, 10)}
+                            onChange={(e) => handleEventChange(event.id, 'startDate', new Date(e.target.value))}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            sx={{ mb: 2 }}
+                        />
+                    </Box>
+                ))}
+                            <Button variant="outlined" sx={{ mb: 4}} onClick={() => handleAddEvent()}>
+                                Ny händelse
+                            </Button>
+                        </Box>
+
             <TextField
                 label="Namn"
                 variant="outlined"
@@ -119,56 +158,12 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                 onChange={(e) => setYear(parseInt(e.target.value, 10))}
                 sx={{ mb: 3 }}
             />
-
-            <Box>
-                <Typography variant="h6" gutterBottom>
-                    Kategorier
-                </Typography>
-                    <Box  sx={{ mb: 3, border: '1px solid #ccc', borderRadius: 2, p: 2 }}>
-                            <Typography variant="subtitle2" gutterBottom>
-                                Händelser
-                            </Typography>
-                            {events.map((event) => (
-                                <Box key={event.id} sx={{ mb: 2, border: '1px solid #ddd', borderRadius: 1, p: 1 }}>
-                                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                                        <Typography variant="body2">{event.name}</Typography>
-                                        <Button variant="text" color="error" size="small" onClick={() => handleRemoveEvent(event.id)}>
-                                            Radera
-                                        </Button>
-                                    </Box>
-                                    <TextField
-                                        label="Namn"
-                                        variant="outlined"
-                                        fullWidth
-                                        value={event.name}
-                                        onChange={(e) => handleEventChange( event.id, 'name', e.target.value)}
-                                        sx={{ mb: 2 }}
-                                    />
-                                    <TextField
-                                        label="Datum"
-                                        variant="outlined"
-                                        fullWidth
-                                        type="date"
-                                        value={event.startDate.toISOString().substr(0, 10)}
-                                        onChange={(e) => handleEventChange(event.id, 'startDate', new Date(e.target.value))}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        sx={{ mb: 2 }}
-                                    />
-                                </Box>
-                            ))}
-                            <Button variant="outlined" onClick={() => handleAddEvent()}>
-                                Ny händelse
-                            </Button>
-                        </Box>
-                    </Box>
-
             <Box display="flex" justifyContent="flex-end" mt={4}>
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     Spara
                 </Button>
             </Box>
+
         </Box>
     );
 }
