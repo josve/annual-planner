@@ -10,6 +10,7 @@ import {Box, Button} from "@mui/material";
 import jsPDF from "jspdf";
 import PptxGenJS from "pptxgenjs";
 import { Canvg } from 'canvg';
+import {monthEnumToNumber} from "@/lib/dates";
 
 interface Props {
     annualWheel: AnnualWheelWithEvents;
@@ -279,8 +280,8 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number, an
 
     // Convert startMonth/endMonth to angles
     const eventData = eventsWithCount.map((ev) => {
-        const startA = monthToAngle(new Date(ev.startDate).getMonth()) + (Math.PI / 2);
-        const endA = monthToAngle(new Date(ev.startDate).getMonth() + 1) + (Math.PI / 2);
+        const startA = monthToAngle(monthEnumToNumber(ev.eventMonth)) + (Math.PI / 2);
+        const endA = monthToAngle(monthEnumToNumber(ev.eventMonth) + 1) + (Math.PI / 2);
         const diff = (endA - startA) / ev.itemCount!;
         const adjStart = startA + (diff * ev.index!);
         const adjEnd = adjStart + diff;
@@ -353,7 +354,7 @@ function addItemCountToEvents(events: Event[]): EventDataWithCount[] {
     const monthCounts: Record<number, number> = {};
     const newEvents: EventDataWithCount[] = [];
     events.forEach(event => {
-        const month = new Date(event.startDate).getMonth();
+        const month = monthEnumToNumber(event.eventMonth);
         newEvents.push({
             ...event,
             month: month,

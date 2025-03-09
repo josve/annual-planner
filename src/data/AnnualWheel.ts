@@ -1,8 +1,8 @@
 "use server";
 
 import Connection from "@/lib/connection";
-import {AnnualWheelWithEvents} from "@/types/AnnualWheel";
-import {PoolConnection} from "mysql2/promise";
+import { AnnualWheelWithEvents } from "@/types/AnnualWheel";
+import { PoolConnection } from "mysql2/promise";
 
 async function getAnnualWheelFromRow(wheelRow: any, connection: PoolConnection) {
     const annualWheel: AnnualWheelWithEvents = {
@@ -14,9 +14,9 @@ async function getAnnualWheelFromRow(wheelRow: any, connection: PoolConnection) 
         events: [],
     };
 
-    // Fetch events for the current category
+    // Fetch events for the current annual wheel using the new event_month column
     const [eventRows]: any = await connection.query(
-        "SELECT id, wheel_id, name, start_date, end_date FROM events WHERE wheel_id = ?",
+        "SELECT id, wheel_id, name, event_month FROM events WHERE wheel_id = ?",
         [wheelRow.id]
     );
 
@@ -24,8 +24,7 @@ async function getAnnualWheelFromRow(wheelRow: any, connection: PoolConnection) 
         id: eventRow.id,
         wheelId: eventRow.wheel_id,
         name: eventRow.name,
-        startDate: new Date(eventRow.start_date),
-        endDate: eventRow.end_date ? new Date(eventRow.end_date) : null,
+        eventMonth: eventRow.event_month,
     }));
     return annualWheel;
 }
@@ -74,7 +73,6 @@ export async function getAnnualWheelById(id: number | undefined): Promise<Annual
         }
 
         const wheelRow = wheelRows[0];
-
         return await getAnnualWheelFromRow(wheelRow, connection);
     } catch (error) {
         console.error(`Error fetching annual wheel with ID ${id}:`, error);
@@ -107,7 +105,8 @@ export async function createAnnualWheel(
 
 export async function updateAnnualWheel(
     id: number,
-    updates: Partial<AnnualWheelWithEvents>): Promise<void> {
+    updates: Partial<AnnualWheelWithEvents>
+): Promise<void> {
     const connection = await Connection.getInstance().getConnection();
     try {
         await connection.beginTransaction();
@@ -155,7 +154,7 @@ export async function updateAnnualWheel(
             for (const eventUpdate of events) {
                 if (eventUpdate.id && eventUpdate.id >= 0) {
                     // Existing event: update
-                    const {id: eventId, name, startDate, endDate} = eventUpdate;
+                    const { id: eventId, name, eventMonth } = eventUpdate;
 
                     const eventFields: string[] = [];
                     const eventValues: any[] = [];
@@ -164,19 +163,15 @@ export async function updateAnnualWheel(
                         eventFields.push("name = ?");
                         eventValues.push(name);
                     }
-                    if (startDate !== undefined) {
-                        eventFields.push("start_date = ?");
-                        eventValues.push(new Date(startDate).toLocaleDateString('sv-SE'));
-                    }
-                    if (endDate !== undefined) {
-                        eventFields.push("end_date = ?");
-                        eventValues.push(endDate ? new Date(endDate).toLocaleDateString('sv-SE') : null);
+                    if (eventMonth !== undefined) {
+                        eventFields.push("event_month = ?");
+                        eventValues.push(eventMonth);
                     }
 
                     if (eventFields.length > 0) {
                         const eventQuery = `UPDATE events
-                                            SET ${eventFields.join(", ")}
-                                            WHERE id = ?`;
+                                SET ${eventFields.join(", ")}
+                                WHERE id = ?`;
                         eventValues.push(eventId);
                         await connection.query(eventQuery, eventValues);
                     }
@@ -184,26 +179,24 @@ export async function updateAnnualWheel(
                     updatedEventIds.push(eventId);
                 } else {
                     // New event: create
-                    const {name, startDate, endDate} = eventUpdate;
-
+                    const { name, eventMonth } = eventUpdate;
                     await connection.query(
-                        "INSERT INTO events (wheel_id, name, start_date, end_date) VALUES (?, ?, ?, ?)",
-                        [id, name, new Date(startDate).toLocaleDateString('sv-SE'), endDate ? new Date(endDate).toLocaleDateString('sv-SE') : null]
+                        "INSERT INTO events (wheel_id, name, event_month) VALUES (?, ?, ?)",
+                        [id, name, eventMonth]
                     );
                 }
             }
 
             // Delete events that were not updated
-            const eventsToDelete = existingEventIds.filter((evtId: number) => !updatedEventIds.includes(evtId));
+            const eventsToDelete = existingEventIds.filter(
+                (evtId: number) => !updatedEventIds.includes(evtId)
+            );
             if (eventsToDelete.length > 0) {
                 await connection.query(
-                    `DELETE
-                     FROM events
-                     WHERE id IN (${eventsToDelete.map(() => "?").join(", ")})`,
+                    `DELETE FROM events WHERE id IN (${eventsToDelete.map(() => "?").join(", ")})`,
                     eventsToDelete
                 );
             }
-
         }
 
         await connection.commit();
@@ -220,9 +213,7 @@ export async function deleteAnnualWheel(id: number): Promise<void> {
     const connection = await Connection.getInstance().getConnection();
     try {
         await connection.beginTransaction();
-
         await connection.query("DELETE FROM annual_wheels WHERE id = ?", [id]);
-
         await connection.commit();
     } catch (error) {
         await connection.rollback();

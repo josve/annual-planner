@@ -8,7 +8,7 @@ import {
     TextField,
     Button,
     Divider,
-    IconButton,
+    IconButton, FormControl, InputLabel, Select, MenuItem,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import {Event} from "@/types/Event";
@@ -37,8 +37,7 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
             id: getNewValue(), // Temporary ID
             name: "Ny händelse",
             wheelId: annualWheel.id,
-            startDate: new Date(),
-            endDate: undefined,
+            eventMonth: "January"
         };
         setEvents([...events, newEvent]);
     };
@@ -110,18 +109,30 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                             onChange={(e) => handleEventChange( event.id, 'name', e.target.value)}
                             sx={{ mb: 2 }}
                         />
-                        <TextField
-                            label="Datum"
-                            variant="outlined"
-                            fullWidth
-                            type="date"
-                            value={event.startDate.toISOString().substr(0, 10)}
-                            onChange={(e) => handleEventChange(event.id, 'startDate', new Date(e.target.value))}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            sx={{ mb: 2 }}
-                        />
+                        <FormControl fullWidth sx={{ mb: 2 }}>
+                            <InputLabel id="event-month-label">Månad</InputLabel>
+                            <Select
+                                labelId="event-month-label"
+                                label="Månad"
+                                value={event.eventMonth}
+                                onChange={(e) =>
+                                    handleEventChange(event.id, 'eventMonth', e.target.value)
+                                }
+                            >
+                                <MenuItem value="January">Januari</MenuItem>
+                                <MenuItem value="February">Februari</MenuItem>
+                                <MenuItem value="March">Mars</MenuItem>
+                                <MenuItem value="April">April</MenuItem>
+                                <MenuItem value="May">Maj</MenuItem>
+                                <MenuItem value="June">Juni</MenuItem>
+                                <MenuItem value="July">Juli</MenuItem>
+                                <MenuItem value="August">Augusti</MenuItem>
+                                <MenuItem value="September">September</MenuItem>
+                                <MenuItem value="October">Oktober</MenuItem>
+                                <MenuItem value="November">November</MenuItem>
+                                <MenuItem value="December">December</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Box>
                 ))}
                             <Button variant="outlined" sx={{ mb: 4}} onClick={() => handleAddEvent()}>
