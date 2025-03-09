@@ -110,9 +110,9 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                             sx={{ mb: 2 }}
                         />
                         <FormControl fullWidth sx={{ mb: 2 }}>
-                            <InputLabel id="event-month-label">Månad</InputLabel>
+                            <InputLabel id={'event-month-label-' + event.id}>Månad</InputLabel>
                             <Select
-                                labelId="event-month-label"
+                                labelId={'event-month-label-' + event.id}
                                 label="Månad"
                                 value={event.eventMonth}
                                 onChange={(e) =>
