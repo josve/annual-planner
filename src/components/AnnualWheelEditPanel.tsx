@@ -89,6 +89,11 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                     {error}
                 </Typography>
             )}
+            <Box display="flex" justifyContent="flex-end" mt={4}>
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Spara
+                </Button>
+            </Box>
             <Box>
                 <Typography variant="h6" gutterBottom>
                     Händelser
@@ -113,11 +118,15 @@ const AnnualWheelEditPanel: React.FC<AnnualWheelEditPanelProps> = ({ annualWheel
                             <InputLabel id={'event-month-label-' + event.id}>Månad</InputLabel>
                             <Select
                                 labelId={'event-month-label-' + event.id}
+                                id={'event-month-' + event.id}
                                 label="Månad"
                                 value={event.eventMonth}
                                 onChange={(e) =>
                                     handleEventChange(event.id, 'eventMonth', e.target.value)
                                 }
+                                MenuProps={{
+                                    disablePortal: true, // Renders the dropdown in the parent container
+                                }}
                             >
                                 <MenuItem value="January">Januari</MenuItem>
                                 <MenuItem value="February">Februari</MenuItem>
