@@ -224,6 +224,23 @@ function drawAnnualWheel(svgEl: SVGSVGElement, width: number, height: number, an
             return topArc({ startAngle, endAngle });
         });
 
+    const innerArc = d3.arc<any>()
+        .innerRadius(innerRadius)
+        .outerRadius(innerRadius * 0.98);
+
+    // Each quarter arc
+    svg.selectAll("path.month-arc-3")
+        .data(monthDataWithQuarters)
+        .enter()
+        .append("path")
+        .attr("class", "month-arc-3")
+        .attr("transform", `translate(${centerX},${centerY})`)
+        .attr("fill", "rgb(83,160,69)") // Single green color
+        .attr("d", (d: any) => {
+            const startAngle = monthToAngle(d.month) + d.quarter * radiansPerQuarter;
+            const endAngle = startAngle + radiansPerQuarter;
+            return innerArc({ startAngle, endAngle });
+        });
     // Define the arc generator
     const monthArc = d3.arc<any>()
         .innerRadius(innerRadius)
